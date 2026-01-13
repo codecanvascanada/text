@@ -44,6 +44,21 @@
         .preset-btn { border: 2px solid #eee; padding: 10px 5px; border-radius: 10px; cursor: pointer; text-align: center; font-size: 0.75rem; font-weight: bold; transition: all 0.2s; background: #fff; }
         .preset-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
 
+        /* Settings Grid */
+        .setting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        @media (max-width: 600px) { .setting-grid { grid-template-columns: 1fr; gap: 10px; } }
+
+        /* Range Slider Style */
+        .range-wrapper { margin-bottom: 20px; }
+        .range-wrapper label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); }
+        input[type="range"] { width: 100%; cursor: pointer; }
+
+        input[type="color"] { -webkit-appearance: none; appearance: none; width: 100%; height: 45px; cursor: pointer; background: none; border: 2px solid #ddd; border-radius: 10px; padding: 2px; box-sizing: border-box; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; }
+
+        .btn-main { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
+        .btn-share { background: #44bd32; margin-top: 10px; }
+
         /* Scenarios Section Styles */
         .scenarios-container { margin-top: 30px; }
         .scenarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -53,22 +68,13 @@
         .scenario-item span { font-size: 0.8rem; font-weight: bold; color: #555; display: block; line-height: 1.2; }
         .section-title { font-size: 1.1rem; color: var(--dark); margin: 0 0 15px 0; font-weight: bold; }
 
-        .setting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        @media (max-width: 600px) { .setting-grid { grid-template-columns: 1fr; gap: 10px; } }
-
-        input[type="color"] { -webkit-appearance: none; appearance: none; width: 100%; height: 45px; cursor: pointer; background: none; border: 2px solid #ddd; border-radius: 10px; padding: 2px; box-sizing: border-box; }
-        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; }
-
-        .btn-main { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
-        .btn-share { background: #44bd32; margin-top: 10px; }
-
         .seo-content { margin-top: 30px; line-height: 1.8; color: #666; padding: 25px; background: #fff; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .seo-content h3 { margin-top: 0; color: var(--dark); font-size: 1.1rem; }
 
         #display-page { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 1000; overflow: hidden; }
         #display-page.active { display: flex; align-items: center; justify-content: center; }
         #display-page.hide-cursor { cursor: none; }
-        #scrolling-text { white-space: nowrap; font-weight: 900; line-height: 1; position: absolute; left: 0; will-change: transform; }
+        #scrolling-text { white-space: nowrap; font-weight: 900; line-height: 1; position: absolute; left: 0; will-change: transform; transition: margin-top 0.3s; }
         #display-controls { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 1100; transition: opacity 0.5s, visibility 0.5s; opacity: 0; visibility: hidden; }
         #display-controls.visible { opacity: 1; visibility: visible; }
         .overlay-btn { padding: 12px 20px; background: rgba(255, 255, 255, 0.25); color: white; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(8px); font-weight: bold; }
@@ -115,10 +121,17 @@
                 <div><label>Text Color</label><input type="color" id="textColor" value="#ffffff"></div>
                 <div><label>Background</label><input type="color" id="bgColor" value="#000000"></div>
             </div>
+            
             <div class="setting-grid">
                 <div><label>Size</label><input type="range" id="sizeSlider" min="10" max="100" value="70"></div>
                 <div><label>Speed</label><input type="range" id="speedSlider" min="1" max="10" value="5"></div>
             </div>
+
+            <div class="range-wrapper">
+                <label>Vertical Position (Up)</label>
+                <input type="range" id="vPosSlider" min="0" max="30" value="0" step="1">
+            </div>
+
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size: 0.9rem; margin-bottom: 15px;">
                 <input type="checkbox" id="scrollCheck" checked style="width:18px; height:18px;"> Enable Animation
             </label>
@@ -174,6 +187,7 @@
             document.getElementById('bgColor').value = bg;
             document.getElementById('sizeSlider').value = size;
             document.getElementById('speedSlider').value = speed;
+            document.getElementById('vPosSlider').value = 0; // Reset position on preset
         }
 
         function handleUserActivity() {
@@ -201,6 +215,11 @@
             textElement.style.color = document.getElementById('textColor').value;
             displayPage.style.backgroundColor = document.getElementById('bgColor').value;
             textElement.style.fontSize = document.getElementById('sizeSlider').value + "vh";
+            
+            // New vertical position logic
+            const vPos = document.getElementById('vPosSlider').value;
+            textElement.style.marginTop = `-${vPos}vh`; // Move up by adding negative margin
+
             textElement.style.animation = 'none';
             void textElement.offsetWidth;
 
@@ -237,6 +256,7 @@
             params.set('b', document.getElementById('bgColor').value);
             params.set('s', document.getElementById('sizeSlider').value);
             params.set('v', document.getElementById('speedSlider').value);
+            params.set('vp', document.getElementById('vPosSlider').value); // Save vertical pos
             params.set('sc', document.getElementById('scrollCheck').checked);
             const shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
             navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied to clipboard!'));
@@ -250,6 +270,7 @@
                 document.getElementById('bgColor').value = urlParams.get('b');
                 document.getElementById('sizeSlider').value = urlParams.get('s');
                 document.getElementById('speedSlider').value = urlParams.get('v');
+                if(urlParams.has('vp')) document.getElementById('vPosSlider').value = urlParams.get('vp');
                 document.getElementById('scrollCheck').checked = urlParams.get('sc') === 'true';
                 startDisplay();
             }
