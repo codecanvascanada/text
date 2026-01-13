@@ -2,11 +2,11 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>프로 응원 전광판 - 온라인 무료 도구</title>
     <style>
         :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Pretendard', sans-serif; background: var(--bg); overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Pretendard', -apple-system, sans-serif; background: var(--bg); overflow-x: hidden; }
 
         /* [1] 랜딩(설정) 페이지 스타일 */
         #landing-page { display: flex; flex-direction: column; align-items: center; padding: 40px 20px; box-sizing: border-box; }
@@ -24,13 +24,23 @@
         .seo-content { max-width: 800px; margin-top: 50px; line-height: 1.8; color: #666; }
 
         /* [2] 전광판 실행 페이지 스타일 */
-        #display-page { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 1000; overflow: hidden; cursor: none; }
+        #display-page { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 1000; overflow: hidden; }
         #display-page.active { display: flex; align-items: center; justify-content: center; }
-        #scrolling-text { white-space: nowrap; font-weight: 900; line-height: 1; position: absolute; left: 0; }
+        #display-page.hide-cursor { cursor: none; } /* 커서 숨김용 */
+
+        #scrolling-text { white-space: nowrap; font-weight: 900; line-height: 1; position: absolute; left: 0; will-change: transform; }
         
-        /* 되돌아가기 버튼 */
-        #back-btn { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1100; padding: 10px 20px; background: rgba(255,255,255,0.2); color: white; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; opacity: 0; transition: opacity 0.3s; }
-        #display-page:hover #back-btn { opacity: 1; }
+        /* 되돌아가기 버튼 (수정됨) */
+        #back-btn { 
+            position: fixed; top: 30px; left: 50%; transform: translateX(-50%); 
+            z-index: 1100; padding: 12px 24px; 
+            background: rgba(255, 255, 255, 0.25); color: white; 
+            border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); 
+            cursor: pointer; font-size: 1rem; backdrop-filter: blur(5px);
+            transition: opacity 0.5s ease, visibility 0.5s;
+            opacity: 0; visibility: hidden; /* 기본적으로 숨김 */
+        }
+        #back-btn.visible { opacity: 1; visibility: visible; }
 
         @keyframes scrollAnim { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
     </style>
@@ -52,11 +62,11 @@
             <div class="setting-grid">
                 <div>
                     <label>글자색</label>
-                    <input type="color" id="textColor" value="#ffffff" style="width:100%; height:40px;">
+                    <input type="color" id="textColor" value="#ffffff" style="width:100%; height:45px;">
                 </div>
                 <div>
                     <label>배경색</label>
-                    <input type="color" id="bgColor" value="#000000" style="width:100%; height:40px;">
+                    <input type="color" id="bgColor" value="#000000" style="width:100%; height:45px;">
                 </div>
             </div>
 
@@ -71,26 +81,28 @@
                 </div>
             </div>
 
-            <label><input type="checkbox" id="scrollCheck" checked> 스크롤 애니메이션 사용</label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="scrollCheck" checked style="width:20px; height:20px;"> 
+                스크롤 애니메이션 사용
+            </label>
 
             <button class="btn-main" onclick="startDisplay()">전광판 실행하기</button>
             <button class="btn-main btn-share" onclick="copyShareUrl()">설정 링크 공유하기</button>
         </div>
 
         <div class="seo-content">
-            <h2>스마트폰 전광판, 어떻게 활용하나요?</h2>
-            <p>본 온라인 전광판 서비스는 별도의 앱 설치 없이 브라우저에서 바로 사용할 수 있는 응원 도구입니다. 어두운 콘서트장이나 공항, 경기장에서 자신의 메시지를 강력하게 전달하고 싶을 때 매우 유용합니다.</p>
-            <h3>주요 기능 가이드</h3>
+            <h2>스마트폰 전광판 사용 꿀팁</h2>
+            <p>본 서비스는 별도의 앱 다운로드 없이 웹브라우저에서 즉시 실행 가능한 고성능 전광판 도구입니다. 콘서트 응원, 공항 픽업, 택시 잡기 등 다양한 상황에서 메시지를 전달해 보세요.</p>
+            <h3>최적의 설정 방법</h3>
             <ul>
-                <li><strong>맞춤 색상 설정:</strong> 글자색과 배경색을 자유롭게 조합하여 네온사인 효과를 낼 수 있습니다.</li>
-                <li><strong>속도 조절:</strong> 문구가 지나가는 속도를 조절하여 가독성을 높일 수 있습니다.</li>
-                <li><strong>공유 기능:</strong> 내가 만든 전광판 설정을 링크로 복사하여 친구에게 바로 보낼 수 있습니다.</li>
+                <li><strong>가독성:</strong> 검은 배경에 노란색이나 흰색 글자가 가장 눈에 잘 띕니다.</li>
+                <li><strong>속도 조절:</strong> 문장이 길면 속도를 7~8 정도로 높이는 것이 좋습니다.</li>
+                <li><strong>모바일 팁:</strong> 실행 후 화면을 한 번 터치하면 편집 화면으로 돌아가는 버튼이 나타납니다.</li>
             </ul>
-            <p>※ 팁: 아이폰이나 안드로이드에서 전체화면 버튼을 누르면 주소창 없이 더욱 몰입감 있게 사용할 수 있습니다.</p>
         </div>
     </div>
 
-    <div id="display-page">
+    <div id="display-page" onmousemove="handleUserActivity()" onclick="handleUserActivity()" ontouchstart="handleUserActivity()">
         <button id="back-btn" onclick="stopDisplay()">🔙 편집 화면으로 돌아가기</button>
         <div id="scrolling-text"></div>
     </div>
@@ -99,8 +111,25 @@
         const landingPage = document.getElementById('landing-page');
         const displayPage = document.getElementById('display-page');
         const textElement = document.getElementById('scrolling-text');
-        
-        // 1. 전광판 시작
+        const backBtn = document.getElementById('back-btn');
+        let hideTimer;
+
+        // [핵심] 버튼 및 커서 숨김 로직
+        function handleUserActivity() {
+            if (!displayPage.classList.contains('active')) return;
+
+            // 버튼 보여주기
+            backBtn.classList.add('visible');
+            displayPage.classList.remove('hide-cursor');
+
+            // 3초 후 다시 숨기기 예약
+            clearTimeout(hideTimer);
+            hideTimer = setTimeout(() => {
+                backBtn.classList.remove('visible');
+                displayPage.classList.add('hide-cursor');
+            }, 3000);
+        }
+
         function startDisplay() {
             const text = document.getElementById('userInput').value;
             const tColor = document.getElementById('textColor').value;
@@ -131,13 +160,14 @@
                 textElement.style.transform = 'none';
             }
 
-            // 전체화면 시도
+            // 초기 버튼 노출 후 자동 숨김 시작
+            handleUserActivity();
+
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen().catch(() => {});
             }
         }
 
-        // 2. 돌아가기 (중지)
         function stopDisplay() {
             displayPage.classList.remove('active');
             landingPage.style.display = 'flex';
@@ -146,7 +176,6 @@
             }
         }
 
-        // 3. 공유 주소 생성
         function copyShareUrl() {
             const params = new URLSearchParams();
             params.set('t', document.getElementById('userInput').value);
@@ -162,7 +191,6 @@
             });
         }
 
-        // 4. URL 파라미터 확인 후 자동 실행
         window.onload = () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('t')) {
@@ -176,7 +204,6 @@
             }
         };
 
-        // ESC 키로 돌아가기
         document.addEventListener('keydown', (e) => {
             if (e.key === "Escape" && displayPage.classList.contains('active')) {
                 stopDisplay();
