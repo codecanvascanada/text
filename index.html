@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>전체화면 전광판</title>
+    <title>프로 전광판</title>
     <style>
         body, html {
             margin: 0; padding: 0;
@@ -11,44 +11,56 @@
             background-color: black; color: white;
             font-family: 'Arial Black', sans-serif;
             overflow: hidden; cursor: none;
+            transition: background-color 0.3s;
         }
 
         body.show-cursor { cursor: default; }
 
         #controls {
             position: fixed;
-            top: 10%; left: 50%;
+            top: 5%; left: 50%;
             transform: translateX(-50%);
             z-index: 100;
             display: flex; flex-direction: column;
-            align-items: center; gap: 20px;
+            align-items: center; gap: 15px;
             background: rgba(40, 40, 40, 0.95);
-            padding: 25px; border-radius: 20px;
-            transition: opacity 0.5s ease; /* 좀 더 빠르게 사라지게 수정 */
-            width: 85%; max-width: 500px;
+            padding: 20px; border-radius: 20px;
+            transition: opacity 0.5s ease;
+            width: 90%; max-width: 600px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            color: white;
         }
 
         #controls.hidden { opacity: 0; pointer-events: none; }
 
         input[type="text"] {
-            width: 100%; padding: 15px;
-            font-size: 1.2rem; border-radius: 10px;
+            width: 100%; padding: 12px;
+            font-size: 1.1rem; border-radius: 10px;
             border: none; background: #222; color: white;
             box-sizing: border-box;
         }
 
-        .setting-group {
+        .setting-row {
             display: flex; width: 100%;
-            justify-content: space-around; align-items: center;
-            font-size: 1.1rem;
+            justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
+            font-size: 0.9rem;
         }
+
+        .setting-item { display: flex; align-items: center; gap: 8px; }
+
+        input[type="color"] {
+            border: none; width: 30px; height: 30px; 
+            cursor: pointer; background: none;
+        }
+
+        input[type="range"] { cursor: pointer; }
 
         .btn-group { display: flex; gap: 10px; width: 100%; }
 
         button {
             flex: 1; padding: 15px;
-            font-size: 1.1rem; cursor: pointer;
+            font-size: 1rem; cursor: pointer;
             border-radius: 10px; border: none;
             background: #e84118; color: white; font-weight: bold;
         }
@@ -78,15 +90,30 @@
 <body class="show-cursor" onclick="showControls()">
 
     <div id="controls">
-        <input type="text" id="userInput" placeholder="문구를 입력하세요" id="mainInput">
+        <input type="text" id="userInput" placeholder="문구를 입력하세요" value="HELLO">
         
-        <div class="setting-group">
-            <label style="display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="scrollCheck" checked style="width: 25px; height: 25px;"> 스크롤
-            </label>
-            <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="setting-row">
+            <div class="setting-item">
+                <label><input type="checkbox" id="scrollCheck" checked> 스크롤</label>
+            </div>
+            <div class="setting-item">
+                <span>글자색</span>
+                <input type="color" id="textColor" value="#ffffff">
+            </div>
+            <div class="setting-item">
+                <span>배경색</span>
+                <input type="color" id="bgColor" value="#000000">
+            </div>
+        </div>
+
+        <div class="setting-row">
+            <div class="setting-item">
                 <span>크기</span>
                 <input type="range" id="sizeSlider" min="5" max="100" value="60">
+            </div>
+            <div class="setting-item">
+                <span>속도</span>
+                <input type="range" id="speedSlider" min="1" max="10" value="5">
             </div>
         </div>
 
@@ -97,7 +124,7 @@
     </div>
 
     <div id="display-container">
-        <div id="scrolling-text">입력 후 실행하세요</div>
+        <div id="scrolling-text">HELLO</div>
     </div>
 
     <script>
@@ -110,31 +137,42 @@
         function hideControls() {
             controls.classList.add('hidden');
             body.classList.remove('show-cursor');
-            userInput.blur(); // 입력창 포커스 해제 (키패드 닫기)
+            userInput.blur();
         }
 
         function showControls() {
             controls.classList.remove('hidden');
             body.classList.add('show-cursor');
             clearTimeout(hideTimeout);
-            hideTimeout = setTimeout(hideControls, 3000); // 3초 후 자동 숨김
+            hideTimeout = setTimeout(hideControls, 3000);
         }
 
         function runDisplay(e) {
             if(e) e.stopPropagation();
-            const input = userInput.value;
-            if(!input) return;
-
+            const input = userInput.value || " ";
+            
+            // 글자 및 배경 색상 적용
             textElement.innerText = input;
+            textElement.style.color = document.getElementById('textColor').value;
+            body.style.backgroundColor = document.getElementById('bgColor').value;
+            
+            // 크기 적용
             textElement.style.fontSize = document.getElementById('sizeSlider').value + "vh";
             
+            // 애니메이션 초기화
             textElement.style.animation = 'none';
             void textElement.offsetWidth; 
 
             if (document.getElementById('scrollCheck').checked) {
                 textElement.parentElement.style.justifyContent = 'flex-start';
-                const duration = Math.max(5, input.length * 0.5 + 5); 
-                textElement.style.animation = `scrollAnim ${duration}s linear infinite`;
+                
+                // 속도 계산 (기본 수식에 슬라이더 값 반영)
+                // 슬라이더 값이 클수록(10) duration이 짧아져서 빨라짐
+                const speedVal = document.getElementById('speedSlider').value;
+                const baseDuration = input.length * 0.5 + 5;
+                const adjustedDuration = baseDuration * (11 - speedVal) / 5; 
+                
+                textElement.style.animation = `scrollAnim ${adjustedDuration}s linear infinite`;
             } else {
                 textElement.parentElement.style.justifyContent = 'center';
                 textElement.style.position = 'relative';
@@ -144,41 +182,32 @@
             hideControls();
         }
 
-        // 전체화면 토글 로직 수정
         function toggleFullScreen(e) {
             if(e) e.stopPropagation();
             const docEl = document.documentElement;
-
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+                const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen;
                 if(requestFS) requestFS.call(docEl);
             } else {
-                const exitFS = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+                const exitFS = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen;
                 if(exitFS) exitFS.call(document);
             }
-
-            // 전체화면 전환 시점에 즉시 숨김 처리
             hideControls();
         }
 
-        // 이벤트 리스너들
-        document.addEventListener('mousemove', (e) => {
-            // 마우스가 상단 컨트롤 영역에 없을 때만 자동숨김 타이머 작동
-            showControls();
-        });
+        // 색상 실시간 미리보기 (옵션)
+        document.getElementById('textColor').oninput = function() { textElement.style.color = this.value; };
+        document.getElementById('bgColor').oninput = function() { body.style.backgroundColor = this.value; };
 
+        document.addEventListener('mousemove', showControls);
         document.addEventListener('touchstart', showControls);
-        
         document.addEventListener('keydown', (e) => { 
             showControls();
-            if (e.key === "Escape") {
-                // ESC 누르면 전체화면 해제는 브라우저 기본 기능이므로 컨트롤만 보여줌
-                showControls();
-            }
+            if (e.key === "Escape") showControls();
         });
 
-        // 초기 설정
-        showControls();
+        // 시작 시 한 번 실행
+        runDisplay();
     </script>
 </body>
 </html>
