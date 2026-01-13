@@ -26,21 +26,26 @@
         /* [2] 전광판 실행 페이지 스타일 */
         #display-page { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 1000; overflow: hidden; }
         #display-page.active { display: flex; align-items: center; justify-content: center; }
-        #display-page.hide-cursor { cursor: none; } /* 커서 숨김용 */
+        #display-page.hide-cursor { cursor: none; }
 
         #scrolling-text { white-space: nowrap; font-weight: 900; line-height: 1; position: absolute; left: 0; will-change: transform; }
         
-        /* 되돌아가기 버튼 (수정됨) */
-        #back-btn { 
-            position: fixed; top: 30px; left: 50%; transform: translateX(-50%); 
-            z-index: 1100; padding: 12px 24px; 
+        /* 버튼 컨테이너 (중앙 정렬용) */
+        #display-controls {
+            position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; gap: 10px; align-items: center;
+            z-index: 1100; transition: opacity 0.5s ease, visibility 0.5s;
+            opacity: 0; visibility: hidden;
+        }
+        #display-controls.visible { opacity: 1; visibility: visible; }
+
+        .overlay-btn { 
+            padding: 12px 24px; 
             background: rgba(255, 255, 255, 0.25); color: white; 
             border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); 
-            cursor: pointer; font-size: 1rem; backdrop-filter: blur(5px);
-            transition: opacity 0.5s ease, visibility 0.5s;
-            opacity: 0; visibility: hidden; /* 기본적으로 숨김 */
+            cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(5px);
+            white-space: nowrap;
         }
-        #back-btn.visible { opacity: 1; visibility: visible; }
 
         @keyframes scrollAnim { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
     </style>
@@ -50,7 +55,7 @@
     <div id="landing-page">
         <div class="hero-section">
             <h1>📣 온라인 무료 전광판</h1>
-            <p>콘서트, 응원, 공항 마중 등 어디서나 사용하세요.</p>
+            <p>앱 설치 없이 브라우저에서 바로 사용하는 전광판</p>
         </div>
 
         <div class="config-card">
@@ -60,30 +65,17 @@
             </div>
             
             <div class="setting-grid">
-                <div>
-                    <label>글자색</label>
-                    <input type="color" id="textColor" value="#ffffff" style="width:100%; height:45px;">
-                </div>
-                <div>
-                    <label>배경색</label>
-                    <input type="color" id="bgColor" value="#000000" style="width:100%; height:45px;">
-                </div>
+                <div><label>글자색</label><input type="color" id="textColor" value="#ffffff" style="width:100%; height:45px;"></div>
+                <div><label>배경색</label><input type="color" id="bgColor" value="#000000" style="width:100%; height:45px;"></div>
             </div>
 
             <div class="setting-grid">
-                <div>
-                    <label>크기 (vh)</label>
-                    <input type="range" id="sizeSlider" min="10" max="100" value="70">
-                </div>
-                <div>
-                    <label>속도</label>
-                    <input type="range" id="speedSlider" min="1" max="10" value="5">
-                </div>
+                <div><label>크기 (vh)</label><input type="range" id="sizeSlider" min="10" max="100" value="70"></div>
+                <div><label>속도</label><input type="range" id="speedSlider" min="1" max="10" value="5"></div>
             </div>
 
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                <input type="checkbox" id="scrollCheck" checked style="width:20px; height:20px;"> 
-                스크롤 애니메이션 사용
+                <input type="checkbox" id="scrollCheck" checked style="width:20px; height:20px;"> 스크롤 애니메이션 사용
             </label>
 
             <button class="btn-main" onclick="startDisplay()">전광판 실행하기</button>
@@ -91,19 +83,16 @@
         </div>
 
         <div class="seo-content">
-            <h2>스마트폰 전광판 사용 꿀팁</h2>
-            <p>본 서비스는 별도의 앱 다운로드 없이 웹브라우저에서 즉시 실행 가능한 고성능 전광판 도구입니다. 콘서트 응원, 공항 픽업, 택시 잡기 등 다양한 상황에서 메시지를 전달해 보세요.</p>
-            <h3>최적의 설정 방법</h3>
-            <ul>
-                <li><strong>가독성:</strong> 검은 배경에 노란색이나 흰색 글자가 가장 눈에 잘 띕니다.</li>
-                <li><strong>속도 조절:</strong> 문장이 길면 속도를 7~8 정도로 높이는 것이 좋습니다.</li>
-                <li><strong>모바일 팁:</strong> 실행 후 화면을 한 번 터치하면 편집 화면으로 돌아가는 버튼이 나타납니다.</li>
-            </ul>
+            <h2>스마트폰 전광판 사용 팁</h2>
+            <p>모바일 브라우저에서 전체화면 기능을 사용하면 더욱 깔끔한 전광판 효과를 볼 수 있습니다. 콘서트장 응원이나 어두운 곳에서의 메시지 전달에 최적화되어 있습니다.</p>
         </div>
     </div>
 
     <div id="display-page" onmousemove="handleUserActivity()" onclick="handleUserActivity()" ontouchstart="handleUserActivity()">
-        <button id="back-btn" onclick="stopDisplay()">🔙 편집 화면으로 돌아가기</button>
+        <div id="display-controls">
+            <button class="overlay-btn" onclick="stopDisplay(event)">🔙 편집 화면으로 돌아가기</button>
+            <button class="overlay-btn" id="fullScreenBtn" onclick="requestFullScreenOnly(event)">📱 전체화면으로 보기</button>
+        </div>
         <div id="scrolling-text"></div>
     </div>
 
@@ -111,47 +100,42 @@
         const landingPage = document.getElementById('landing-page');
         const displayPage = document.getElementById('display-page');
         const textElement = document.getElementById('scrolling-text');
-        const backBtn = document.getElementById('back-btn');
+        const displayControls = document.getElementById('display-controls');
         let hideTimer;
 
-        // [핵심] 버튼 및 커서 숨김 로직
         function handleUserActivity() {
             if (!displayPage.classList.contains('active')) return;
-
-            // 버튼 보여주기
-            backBtn.classList.add('visible');
+            displayControls.classList.add('visible');
             displayPage.classList.remove('hide-cursor');
-
-            // 3초 후 다시 숨기기 예약
             clearTimeout(hideTimer);
             hideTimer = setTimeout(() => {
-                backBtn.classList.remove('visible');
+                displayControls.classList.remove('visible');
                 displayPage.classList.add('hide-cursor');
             }, 3000);
         }
 
         function startDisplay() {
-            const text = document.getElementById('userInput').value;
-            const tColor = document.getElementById('textColor').value;
-            const bColor = document.getElementById('bgColor').value;
-            const size = document.getElementById('sizeSlider').value;
-            const speed = document.getElementById('speedSlider').value;
-            const isScroll = document.getElementById('scrollCheck').checked;
-
-            textElement.innerText = text;
-            textElement.style.color = tColor;
-            displayPage.style.backgroundColor = bColor;
-            textElement.style.fontSize = size + "vh";
-            
+            updateDisplayText();
             landingPage.style.display = 'none';
             displayPage.classList.add('active');
+            handleUserActivity();
+            
+            // 실행 즉시 전체화면 시도 (브라우저 정책에 따라 차단될 수 있음)
+            requestFullScreenOnly();
+        }
 
-            // 애니메이션 설정
+        function updateDisplayText() {
+            const text = document.getElementById('userInput').value;
+            textElement.innerText = text;
+            textElement.style.color = document.getElementById('textColor').value;
+            displayPage.style.backgroundColor = document.getElementById('bgColor').value;
+            textElement.style.fontSize = document.getElementById('sizeSlider').value + "vh";
             textElement.style.animation = 'none';
             void textElement.offsetWidth;
 
-            if(isScroll) {
+            if(document.getElementById('scrollCheck').checked) {
                 displayPage.style.justifyContent = 'flex-start';
+                const speed = document.getElementById('speedSlider').value;
                 const duration = Math.max(5, text.length * 0.5 + (11 - speed));
                 textElement.style.animation = `scrollAnim ${duration}s linear infinite`;
             } else {
@@ -159,20 +143,22 @@
                 textElement.style.position = 'relative';
                 textElement.style.transform = 'none';
             }
-
-            // 초기 버튼 노출 후 자동 숨김 시작
-            handleUserActivity();
-
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            }
         }
 
-        function stopDisplay() {
+        // 전체화면 요청 전용 함수
+        function requestFullScreenOnly(e) {
+            if(e) e.stopPropagation();
+            const docEl = document.documentElement;
+            const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+            if(requestFS) requestFS.call(docEl).catch(() => {});
+        }
+
+        function stopDisplay(e) {
+            if(e) e.stopPropagation();
             displayPage.classList.remove('active');
             landingPage.style.display = 'flex';
             if (document.fullscreenElement) {
-                document.exitFullscreen();
+                document.exitFullscreen().catch(() => {});
             }
         }
 
@@ -184,11 +170,8 @@
             params.set('s', document.getElementById('sizeSlider').value);
             params.set('v', document.getElementById('speedSlider').value);
             params.set('sc', document.getElementById('scrollCheck').checked);
-
             const shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                alert('설정된 전광판 주소가 복사되었습니다!');
-            });
+            navigator.clipboard.writeText(shareUrl).then(() => alert('설정된 전광판 주소가 복사되었습니다!'));
         }
 
         window.onload = () => {
@@ -205,9 +188,7 @@
         };
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape" && displayPage.classList.contains('active')) {
-                stopDisplay();
-            }
+            if (e.key === "Escape" && displayPage.classList.contains('active')) stopDisplay();
         });
     </script>
 </body>
