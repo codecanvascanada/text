@@ -35,6 +35,11 @@
         #landing-page { display: flex; flex-direction: column; align-items: center; padding: 0 20px 40px; box-sizing: border-box; }
         .config-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; position: relative; z-index: 100; box-sizing: border-box; margin-top: 10px; }
         
+        /* 본문 상단 설명 문구 스타일 */
+        .intro-text { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; max-width: 500px; width: 100%; box-sizing: border-box; border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .intro-text h2 { margin: 0 0 10px; font-size: 1.1rem; color: var(--dark); }
+        .intro-text p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.5; }
+
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); }
         input[type="text"] { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 1.1rem; }
@@ -75,6 +80,11 @@
         <div class="ad-placeholder side-ad-area left-ad">광고: 좌측 세로</div>
         <div class="ad-placeholder side-ad-area right-ad">광고: 우측 세로</div>
 
+        <div class="intro-text">
+            <h2>무료 전광판 사용법 및 활용 팁</h2>
+            <p>콘서트나 운동 경기 응원, 공항 마중 등 다양한 상황에서 사용 가능한 무료 웹 전광판입니다.</p>
+        </div>
+
         <div class="config-card">
             <div class="input-group">
                 <label>표시할 문구</label>
@@ -105,8 +115,8 @@
         </div>
 
         <div class="seo-content">
-            <h2>무료 전광판 사용법 및 활용 팁</h2>
-            <p>콘서트나 운동 경기 응원, 공항 마중 등 다양한 상황에서 사용 가능한 무료 웹 전광판입니다.</p>
+            <h3>최고의 가독성을 위한 설정 팁</h3>
+            <p>전광판을 사용할 때 가장 중요한 것은 멀리서도 잘 보이는 것입니다. 검은색 배경에 노란색 또는 밝은 연두색 글자 조합을 추천합니다. 또한 문구의 길이에 따라 속도를 조절하여 상대방이 충분히 읽을 시간을 확보하세요.</p>
         </div>
     </div>
 
@@ -119,6 +129,7 @@
     </div>
 
     <script>
+        /* [기존 스크립트 로직 동일] */
         const landingPage = document.getElementById('landing-page');
         const displayPage = document.getElementById('display-page');
         const textElement = document.getElementById('scrolling-text');
