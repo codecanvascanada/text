@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>전체화면 전광판</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            overflow: hidden;
+            /* 커서 숨기기용 클래스 */
+            cursor: none; 
+        }
+
+        /* 메뉴가 보일 때는 커서도 보이게 설정 */
+        body.show-cursor {
+            cursor: default;
+        }
+
+        #controls {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(50, 50, 50, 0.95);
+            padding: 12px 25px;
+            border-radius: 50px;
+            transition: opacity 0.8s ease;
+            border: 1px solid #444;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        #controls.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        input[type="text"] {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            width: 200px;
+            background: #333;
+            color: white;
+        }
+
+        .setting-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            border-left: 1px solid #666;
+            padding-left: 15px;
+        }
+
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background: #e84118;
+            color: white;
+            font-weight: bold;
+        }
+
+        #display-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scrolling-text {
+            white-space: nowrap;
+            font-weight: 900;
+            line-height: 1;
+            position: absolute;
+        }
+
+        @keyframes scrollAnim {
+            from { transform: translateX(100vw); }
+            to { transform: translateX(-100%); }
+        }
+
+        .animate { animation: scrollAnim 10s linear infinite; }
+    </style>
+</head>
+<body class="show-cursor" onclick="showControls()">
+
+    <div id="controls">
+        <input type="text" id="userInput" placeholder="내용 입력" onfocus="showControls()">
+        <div class="setting-group">
+            <label><input type="checkbox" id="scrollCheck" checked> 스크롤</label>
+            <span style="margin-left:5px;">크기:</span>
+            <input type="range" id="sizeSlider" min="5" max="100" value="70">
+        </div>
+        <button onclick="runDisplay(event)">실행</button>
+        <button onclick="toggleFullScreen(event)" style="background:#2f3640;">전체화면</button>
+    </div>
+
+    <div id="display-container">
+        <div id="scrolling-text">내용을 입력하세요</div>
+    </div>
+
+    <script>
+        const controls = document.getElementById('controls');
+        const textElement = document.getElementById('scrolling-text');
+        const scrollCheck = document.getElementById('scrollCheck');
+        const sizeSlider = document.getElementById('sizeSlider');
+        const body = document.body;
+        
+        let hideTimeout;
+
+        function hideControls() {
+            controls.classList.add('hidden');
+            body.classList.remove('show-cursor'); // 커서 숨김
+        }
+
+        function showControls() {
+            controls.classList.remove('hidden');
+            body.classList.add('show-cursor'); // 커서 보임
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(hideControls, 3000);
+        }
+
+        sizeSlider.oninput = function() {
+            textElement.style.fontSize = this.value + "vh";
+            showControls();
+        };
+
+        function runDisplay(e) {
+            if(e) e.stopPropagation();
+            const input = document.getElementById('userInput').value;
+            if(!input) return;
+
+            textElement.innerText = input;
+            
+            if (scrollCheck.checked) {
+                textElement.classList.add('animate');
+                textElement.style.position = 'absolute';
+                textElement.style.transform = '';
+            } else {
+                textElement.classList.remove('animate');
+                textElement.style.position = 'relative';
+                textElement.style.transform = 'none';
+            }
+            
+            textElement.style.fontSize = sizeSlider.value + "vh";
+            hideControls();
+        }
+
+        // 마우스 움직임 감지 시 메뉴와 커서 다시 표시
+        document.addEventListener('mousemove', showControls);
+
+        document.addEventListener('keydown', (e) => {
+            showControls();
+            if (e.key === "Escape") {
+                if (document.fullscreenElement) document.exitFullscreen();
+            }
+        });
+
+        function toggleFullScreen(e) {
+            e.stopPropagation();
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+            // 전체화면 전환 직후 메뉴와 커서 숨김 예약
+            hideTimeout = setTimeout(hideControls, 1000);
+        }
+
+        showControls();
+    </script>
+</body>
+</html>
