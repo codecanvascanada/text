@@ -1,25 +1,222 @@
-/* 기본은 가로 2열 (PC 등 넓은 화면) */
-.setting-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 15px; 
-    margin-bottom: 20px; 
-}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>프로 응원 전광판 - 온라인 무료 도구</title>
+    <style>
+        :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Pretendard', -apple-system, sans-serif; background: var(--bg); overflow-x: hidden; }
 
-/* 모바일 전용: 화면이 좁아지면 1열로 변경 */
-@media (max-width: 600px) {
-    .setting-grid {
-        grid-template-columns: 1fr; /* 1열로 변경 */
-        gap: 10px;
-    }
-    
-    .setting-grid div {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .setting-grid input[type="range"] {
-        width: 100%; /* 슬라이더가 꽉 차도록 설정 */
-        margin-top: 5px;
-    }
-}
+        #header-fixed {
+            position: sticky; top: 0; width: 100%; background: var(--bg); z-index: 200;
+            display: flex; flex-direction: column; align-items: center; padding-top: 20px;
+        }
+        .hero-section { text-align: center; margin-bottom: 10px; }
+        .hero-section h1 { margin: 0; font-size: 1.5rem; }
+        .hero-section p { margin: 5px 0 0; color: #666; font-size: 0.9rem; }
+
+        .ad-placeholder { background: #e1e4e8; color: #999; display: flex; align-items: center; justify-content: center; font-size: 12px; text-align: center; border: 1px dashed #ccc; box-sizing: border-box; }
+        .top-ad-area { width: 100%; max-width: 728px; height: 90px; margin: 10px auto; }
+
+        .side-ad-area { position: fixed; top: 200px; width: 160px; height: 600px; display: none; z-index: 50; }
+        @media (min-width: 1200px) {
+            .side-ad-area { display: flex; }
+            .left-ad { left: calc(50% - 460px); }
+            .right-ad { right: calc(50% - 460px); }
+        }
+
+        #landing-page { display: flex; flex-direction: column; align-items: center; padding: 0 20px 40px; box-sizing: border-box; }
+        
+        .intro-text, .config-card, .seo-content { 
+            width: 100%; 
+            max-width: 500px; 
+            box-sizing: border-box; 
+        }
+
+        .intro-text { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .intro-text h2 { margin: 0 0 10px; font-size: 1.1rem; color: var(--dark); }
+        .intro-text p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.5; }
+
+        .config-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; z-index: 100; margin-top: 20px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); }
+        input[type="text"] { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 1.1rem; }
+
+        /* 설정 그리드 반응형 수정 */
+        .setting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        @media (max-width: 600px) {
+            .setting-grid { grid-template-columns: 1fr; gap: 10px; }
+        }
+
+        input[type="color"] { -webkit-appearance: none; appearance: none; width: 100%; height: 45px; cursor: pointer; background: none; border: 2px solid #ddd; border-radius: 10px; padding: 2px; box-sizing: border-box; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; }
+
+        .btn-main { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
+        .btn-share { background: #44bd32; margin-top: 10px; }
+
+        .seo-content { margin-top: 40px; line-height: 1.8; color: #666; padding: 25px; background: #fff; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .seo-content h3 { margin-top: 0; color: var(--dark); font-size: 1.1rem; }
+
+        #display-page { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 1000; overflow: hidden; }
+        #display-page.active { display: flex; align-items: center; justify-content: center; }
+        #display-page.hide-cursor { cursor: none; }
+        #scrolling-text { white-space: nowrap; font-weight: 900; line-height: 1; position: absolute; left: 0; will-change: transform; }
+        #display-controls { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: row; gap: 12px; align-items: center; z-index: 1100; transition: opacity 0.5s, visibility 0.5s; opacity: 0; visibility: hidden; }
+        #display-controls.visible { opacity: 1; visibility: visible; }
+        .overlay-btn { padding: 12px 20px; background: rgba(255, 255, 255, 0.25); color: white; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(8px); font-weight: bold; white-space: nowrap; }
+
+        @keyframes scrollAnim { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+    </style>
+</head>
+<body>
+
+    <div id="landing-page">
+        <div id="header-fixed">
+            <div class="hero-section">
+                <h1>📣 온라인 무료 전광판</h1>
+                <p>응원 문구를 입력하고 링크로 공유하세요.</p>
+            </div>
+            <div class="ad-placeholder top-ad-area">광고: 제목 하단 배너 (728x90)</div>
+        </div>
+
+        <div class="ad-placeholder side-ad-area left-ad">광고: 좌측 세로</div>
+        <div class="ad-placeholder side-ad-area right-ad">광고: 우측 세로</div>
+
+        <div class="intro-text">
+            <h2>무료 전광판 사용법 및 활용 팁</h2>
+            <p>콘서트나 운동 경기 응원, 공항 마중 등 다양한 상황에서 사용 가능한 무료 웹 전광판입니다.</p>
+        </div>
+
+        <div class="config-card">
+            <div class="input-group">
+                <label>표시할 문구</label>
+                <input type="text" id="userInput" placeholder="문구를 입력하세요" value="HELLO">
+            </div>
+            <div class="setting-grid">
+                <div><label>글자색</label><input type="color" id="textColor" value="#ffffff"></div>
+                <div><label>배경색</label><input type="color" id="bgColor" value="#000000"></div>
+            </div>
+            <div class="setting-grid">
+                <div><label>크기 (vh)</label><input type="range" id="sizeSlider" min="10" max="100" value="70"></div>
+                <div><label>속도</label><input type="range" id="speedSlider" min="1" max="10" value="5"></div>
+            </div>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size: 0.9rem; margin-bottom: 15px;">
+                <input type="checkbox" id="scrollCheck" checked style="width:18px; height:18px;"> 스크롤 애니메이션 사용
+            </label>
+            <div class="ad-placeholder" style="width: 100%; height: 100px; margin-bottom: 15px; border-radius: 10px; background: #f0f2f5;">
+                광고: 실행 버튼 상단 배너
+            </div>
+            <button class="btn-main" onclick="startDisplay()">전광판 실행하기</button>
+            <button class="btn-main btn-share" onclick="copyShareUrl()">설정 링크 공유하기</button>
+        </div>
+
+        <div class="seo-content">
+            <h3>최고의 가독성을 위한 설정 팁</h3>
+            <p>전광판을 사용할 때 가장 중요한 것은 멀리서도 잘 보이는 것입니다. 검은색 배경에 노란색 또는 밝은 연두색 글자 조합을 추천합니다. 또한 문구의 길이에 따라 속도를 조절하여 상대방이 충분히 읽을 시간을 확보하세요.</p>
+        </div>
+    </div>
+
+    <div id="display-page" onmousemove="handleUserActivity()" onclick="handleUserActivity()" ontouchstart="handleUserActivity()">
+        <div id="display-controls">
+            <button class="overlay-btn" onclick="stopDisplay(event)">Edit</button>
+            <button class="overlay-btn" onclick="requestFullScreenOnly(event)">Full Screen</button>
+        </div>
+        <div id="scrolling-text"></div>
+    </div>
+
+    <script>
+        // JS 로직은 동일하게 유지
+        const landingPage = document.getElementById('landing-page');
+        const displayPage = document.getElementById('display-page');
+        const textElement = document.getElementById('scrolling-text');
+        const displayControls = document.getElementById('display-controls');
+        let hideTimer;
+
+        function handleUserActivity() {
+            if (!displayPage.classList.contains('active')) return;
+            displayControls.classList.add('visible');
+            displayPage.classList.remove('hide-cursor');
+            clearTimeout(hideTimer);
+            hideTimer = setTimeout(() => {
+                displayControls.classList.remove('visible');
+                displayPage.classList.add('hide-cursor');
+            }, 3000);
+        }
+
+        function startDisplay() {
+            updateDisplayText();
+            landingPage.style.display = 'none';
+            displayPage.classList.add('active');
+            handleUserActivity();
+            requestFullScreenOnly();
+        }
+
+        function updateDisplayText() {
+            const text = document.getElementById('userInput').value;
+            textElement.innerText = text;
+            textElement.style.color = document.getElementById('textColor').value;
+            displayPage.style.backgroundColor = document.getElementById('bgColor').value;
+            textElement.style.fontSize = document.getElementById('sizeSlider').value + "vh";
+            textElement.style.animation = 'none';
+            void textElement.offsetWidth;
+
+            if(document.getElementById('scrollCheck').checked) {
+                displayPage.style.justifyContent = 'flex-start';
+                const speed = document.getElementById('speedSlider').value;
+                const duration = Math.max(5, text.length * 0.5 + (11 - speed));
+                textElement.style.animation = `scrollAnim ${duration}s linear infinite`;
+            } else {
+                displayPage.style.justifyContent = 'center';
+                textElement.style.position = 'relative';
+                textElement.style.transform = 'none';
+            }
+        }
+
+        function requestFullScreenOnly(e) {
+            if(e) e.stopPropagation();
+            const docEl = document.documentElement;
+            const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+            if(requestFS) requestFS.call(docEl).catch(() => {});
+        }
+
+        function stopDisplay(e) {
+            if(e) e.stopPropagation();
+            displayPage.classList.remove('active');
+            landingPage.style.display = 'flex';
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        function copyShareUrl() {
+            const params = new URLSearchParams();
+            params.set('t', document.getElementById('userInput').value);
+            params.set('c', document.getElementById('textColor').value);
+            params.set('b', document.getElementById('bgColor').value);
+            params.set('s', document.getElementById('sizeSlider').value);
+            params.set('v', document.getElementById('speedSlider').value);
+            params.set('sc', document.getElementById('scrollCheck').checked);
+            const shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
+            navigator.clipboard.writeText(shareUrl).then(() => alert('설정된 전광판 주소가 복사되었습니다!'));
+        }
+
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('t')) {
+                document.getElementById('userInput').value = urlParams.get('t');
+                document.getElementById('textColor').value = urlParams.get('c');
+                document.getElementById('bgColor').value = urlParams.get('b');
+                document.getElementById('sizeSlider').value = urlParams.get('s');
+                document.getElementById('speedSlider').value = urlParams.get('v');
+                document.getElementById('scrollCheck').checked = urlParams.get('sc') === 'true';
+                startDisplay();
+            }
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && displayPage.classList.contains('active')) stopDisplay();
+        });
+    </script>
+</body>
+</html>
