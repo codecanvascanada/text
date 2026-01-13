@@ -24,8 +24,8 @@
             align-items: center; gap: 20px;
             background: rgba(40, 40, 40, 0.95);
             padding: 25px; border-radius: 20px;
-            transition: opacity 0.8s ease;
-            width: 80%; max-width: 500px;
+            transition: opacity 0.5s ease; /* 좀 더 빠르게 사라지게 수정 */
+            width: 85%; max-width: 500px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
 
@@ -69,10 +69,6 @@
             will-change: transform;
         }
 
-        /* 애니메이션 수정: 
-           시작은 화면 오른쪽 밖(100vw)에서, 
-           끝은 글자 전체가 화면 왼쪽으로 완전히 빠져나간 지점(-100%)까지
-        */
         @keyframes scrollAnim {
             from { transform: translateX(100vw); }
             to { transform: translateX(-100%); }
@@ -82,11 +78,11 @@
 <body class="show-cursor" onclick="showControls()">
 
     <div id="controls">
-        <input type="text" id="userInput" placeholder="문구를 입력하세요" onfocus="showControls()">
+        <input type="text" id="userInput" placeholder="문구를 입력하세요" id="mainInput">
         
         <div class="setting-group">
             <label style="display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="scrollCheck" checked style="width: 20px; height: 20px;"> 스크롤
+                <input type="checkbox" id="scrollCheck" checked style="width: 25px; height: 25px;"> 스크롤
             </label>
             <div style="display: flex; align-items: center; gap: 10px;">
                 <span>크기</span>
@@ -101,43 +97,42 @@
     </div>
 
     <div id="display-container">
-        <div id="scrolling-text">HELLO</div>
+        <div id="scrolling-text">입력 후 실행하세요</div>
     </div>
 
     <script>
         const controls = document.getElementById('controls');
         const textElement = document.getElementById('scrolling-text');
+        const userInput = document.getElementById('userInput');
         const body = document.body;
         let hideTimeout;
 
         function hideControls() {
             controls.classList.add('hidden');
             body.classList.remove('show-cursor');
+            userInput.blur(); // 입력창 포커스 해제 (키패드 닫기)
         }
 
         function showControls() {
             controls.classList.remove('hidden');
             body.classList.add('show-cursor');
             clearTimeout(hideTimeout);
-            hideTimeout = setTimeout(hideControls, 4000);
+            hideTimeout = setTimeout(hideControls, 3000); // 3초 후 자동 숨김
         }
 
         function runDisplay(e) {
             if(e) e.stopPropagation();
-            const input = document.getElementById('userInput').value;
+            const input = userInput.value;
             if(!input) return;
 
             textElement.innerText = input;
             textElement.style.fontSize = document.getElementById('sizeSlider').value + "vh";
             
-            // 애니메이션 초기화
             textElement.style.animation = 'none';
             void textElement.offsetWidth; 
 
             if (document.getElementById('scrollCheck').checked) {
                 textElement.parentElement.style.justifyContent = 'flex-start';
-                
-                // 글자 길이에 따른 유연한 속도 조절 (기본 10글자 기준 약 10초)
                 const duration = Math.max(5, input.length * 0.5 + 5); 
                 textElement.style.animation = `scrollAnim ${duration}s linear infinite`;
             } else {
@@ -149,24 +144,40 @@
             hideControls();
         }
 
+        // 전체화면 토글 로직 수정
         function toggleFullScreen(e) {
             if(e) e.stopPropagation();
             const docEl = document.documentElement;
-            if (!document.fullscreenElement) {
-                (docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.mozRequestFullScreen).call(docEl);
+
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+                if(requestFS) requestFS.call(docEl);
             } else {
-                (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document);
+                const exitFS = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+                if(exitFS) exitFS.call(document);
             }
-            hideTimeout = setTimeout(hideControls, 1000);
+
+            // 전체화면 전환 시점에 즉시 숨김 처리
+            hideControls();
         }
 
-        // 터치 및 마우스 이벤트
-        document.addEventListener('mousemove', showControls);
+        // 이벤트 리스너들
+        document.addEventListener('mousemove', (e) => {
+            // 마우스가 상단 컨트롤 영역에 없을 때만 자동숨김 타이머 작동
+            showControls();
+        });
+
         document.addEventListener('touchstart', showControls);
-        document.addEventListener('keydown', (e) => { if (e.key === "Escape") showControls(); });
+        
+        document.addEventListener('keydown', (e) => { 
+            showControls();
+            if (e.key === "Escape") {
+                // ESC 누르면 전체화면 해제는 브라우저 기본 기능이므로 컨트롤만 보여줌
+                showControls();
+            }
+        });
 
         // 초기 설정
-        runDisplay(); 
         showControls();
     </script>
 </body>
