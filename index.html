@@ -12,8 +12,8 @@
     <meta property="og:title" content="Pro LED Banner - All-in-One Screen Tool">
     <meta property="og:description" content="Turn your phone into a bright LED sign, clock, or timer instantly.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://your-website-url.com">
-    <meta property="og:image" content="https://your-website-url.com/share-image.png">
+    <meta property="og:url" content="https://tidecanada.com/led">
+    <meta property="og:image" content="https://tidecanada.com/led/share.png">
 
     <style>
         :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; --track: #e1e4e8; }
@@ -34,7 +34,7 @@
         .hero-section p { margin: 8px 0 0; color: #666; font-size: 1rem; }
 
         /* [Layout] */
-        .app-wrapper { display: flex; align-items: flex-start; justify-content: center; gap: 30px; max-width: 1000px; margin: 0 auto; padding: 20px 20px 60px; box-sizing: border-box; min-height: 100vh; }
+        .app-wrapper { display: flex; align-items: flex-start; justify-content: center; gap: 30px; max-width: 1000px; margin: 0 auto; padding: 20px 20px 80px; box-sizing: border-box; min-height: 100vh; }
         .content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 30px; }
 
         /* [Intro & Scenarios] */
@@ -119,8 +119,26 @@
         #display-controls.visible { opacity: 1; visibility: visible; }
         .overlay-btn { padding: 12px 25px; background: rgba(255, 255, 255, 0.2); color: white; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(5px); font-weight: bold; }
 
-        /* Mobile & Responsive */
-        .hamburger-btn { display: none; position: fixed; top: 20px; right: 20px; z-index: 6000; background: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* Mobile Hamburger Button (Floating Action Button Style) */
+        .hamburger-btn { 
+            display: none; 
+            position: fixed; 
+            bottom: 30px; /* Moved to bottom */
+            right: 30px;  /* Moved to right */
+            z-index: 8000; 
+            width: 60px; height: 60px; 
+            background: var(--primary); /* Brand Color */
+            color: white; 
+            border: none; 
+            border-radius: 50%; /* Circle */
+            font-size: 1.8rem; 
+            box-shadow: 0 4px 15px rgba(232, 65, 24, 0.4); 
+            cursor: pointer;
+            align-items: center; justify-content: center;
+            transition: transform 0.2s;
+        }
+        .hamburger-btn:active { transform: scale(0.95); }
+
         .menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 5000; }
         
         @media (max-width: 850px) {
@@ -132,9 +150,13 @@
             }
             .sidebar.active { right: 0; visibility: visible; } 
             .menu-overlay.active { display: block; }
-            .hamburger-btn, .close-btn { display: block; }
+            
+            /* Show hamburger only on mobile */
+            .hamburger-btn { display: flex; } 
+            .close-btn { display: block; }
+            
             .preset-grid { grid-template-columns: repeat(3, 1fr); }
-            .scenarios-grid { grid-template-columns: repeat(1, 1fr); } /* 1 column on mobile */
+            .scenarios-grid { grid-template-columns: repeat(1, 1fr); }
         }
         @keyframes scrollAnim { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
     </style>
@@ -307,13 +329,13 @@
         <div class="close-btn" onclick="toggleMenu()">✕</div>
         <div class="brand-title">Menu</div>
         <div class="nav-menu">
-            <a href="#section-banner" class="nav-link" onclick="toggleMenu()">💬 1. Banner</a>
-            <a href="#section-clock" class="nav-link" onclick="toggleMenu()">🕒 2. Clock</a>
-            <a href="#section-timer" class="nav-link" onclick="toggleMenu()">⏳ 3. Timer</a>
-            <a href="#section-stopwatch" class="nav-link" onclick="toggleMenu()">⏱️ 4. Stopwatch</a>
-            <a href="#section-quote" class="nav-link" onclick="toggleMenu()">📜 5. Quote</a>
+            <div class="nav-link" onclick="location.href='#section-banner'; toggleMenu()">💬 1. Banner</div>
+            <div class="nav-link" onclick="location.href='#section-clock'; toggleMenu()">🕒 2. Clock</div>
+            <div class="nav-link" onclick="location.href='#section-timer'; toggleMenu()">⏳ 3. Timer</div>
+            <div class="nav-link" onclick="location.href='#section-stopwatch'; toggleMenu()">⏱️ 4. Stopwatch</div>
+            <div class="nav-link" onclick="location.href='#section-quote'; toggleMenu()">📜 5. Quote</div>
             <div style="height:1px; background:#eee; margin:5px 0;"></div>
-            <a href="#" class="nav-link" onclick="window.scrollTo(0,0); toggleMenu(); return false;">⬆️ Top</a>
+            <div class="nav-link" onclick="window.scrollTo(0,0); toggleMenu()">⬆️ Top</div>
         </div>
     </nav>
 </div>
