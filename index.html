@@ -6,7 +6,16 @@
     <title>Pro LED Banner - Multi Tool</title>
     <style>
         :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; --track: #e1e4e8; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* [Global Reset] */
+        body, html { 
+            margin: 0; padding: 0; 
+            width: 100%; height: 100%; 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            background: var(--bg); 
+            overflow-x: hidden; /* 가로 스크롤 방지 */
+            scroll-behavior: smooth; 
+        }
 
         /* [Header] */
         #header-area { text-align: center; position: sticky; top: 0; background: var(--bg); z-index: 150; padding: 20px 0 10px; }
@@ -70,14 +79,25 @@
         #display-controls.visible { opacity: 1; visibility: visible; }
         .overlay-btn { padding: 12px 25px; background: rgba(255, 255, 255, 0.2); color: white; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(5px); font-weight: bold; }
 
-        /* Mobile */
+        /* Mobile & Responsive */
         .hamburger-btn { display: none; position: fixed; top: 20px; right: 20px; z-index: 6000; background: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 5000; }
         
         @media (max-width: 850px) {
             .app-wrapper { display: block; padding: 15px; }
-            .sidebar { position: fixed; top: 0 !important; right: -280px; width: 260px; height: 100vh; transition: right 0.3s; border-radius: 0; z-index: 7000; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
-            .sidebar.active { right: 0; } 
+            
+            /* [Fixed] Sidebar White Space Issue */
+            .sidebar { 
+                position: fixed; top: 0 !important; right: -280px; width: 260px; height: 100vh; 
+                z-index: 7000; box-shadow: -2px 0 10px rgba(0,0,0,0.1); 
+                visibility: hidden; /* Hide completely when closed */
+                transition: right 0.3s, visibility 0.3s; 
+            }
+            .sidebar.active { 
+                right: 0; 
+                visibility: visible; /* Show when active */
+            } 
+            
             .menu-overlay.active { display: block; }
             .hamburger-btn, .close-btn { display: block; }
             .preset-grid { grid-template-columns: repeat(3, 1fr); }
@@ -324,7 +344,6 @@
         if (!saved) return;
         const s = JSON.parse(saved);
 
-        // Banner
         if(s.b_text) document.getElementById('userInput').value = s.b_text;
         if(s.b_color) document.getElementById('bannerColor').value = s.b_color;
         if(s.b_bg) document.getElementById('bannerBg').value = s.b_bg;
@@ -333,14 +352,12 @@
         if(s.b_vpos) document.getElementById('vPosSlider').value = s.b_vpos;
         if(s.b_anim !== undefined) document.getElementById('scrollCheck').checked = s.b_anim;
         
-        // Clock
         if(s.c_color) document.getElementById('clockColor').value = s.c_color;
         if(s.c_bg) document.getElementById('clockBg').value = s.c_bg;
         if(s.c_size) document.getElementById('clockSize').value = s.c_size;
         if(s.c_vpos) document.getElementById('clockVPos').value = s.c_vpos;
         if(s.c_24 !== undefined) document.getElementById('clock24').checked = s.c_24;
 
-        // Timer
         if(s.t_color) document.getElementById('timerColor').value = s.t_color;
         if(s.t_bg) document.getElementById('timerBg').value = s.t_bg;
         if(s.t_size) document.getElementById('timerSize').value = s.t_size;
@@ -349,7 +366,6 @@
         if(s.t_m) document.getElementById('timerM').value = s.t_m;
         if(s.t_s) document.getElementById('timerS').value = s.t_s;
 
-        // Stop
         if(s.s_color) document.getElementById('stopColor').value = s.s_color;
         if(s.s_bg) document.getElementById('stopBg').value = s.s_bg;
         if(s.s_size) document.getElementById('stopSize').value = s.s_size;
@@ -363,7 +379,7 @@
         currentMode = mode;
         displayPage.classList.add('active');
         
-        // Hide mobile hamburger when active
+        // [Fixed] Hide hamburger menu when active
         document.querySelector('.hamburger-btn').style.display = 'none';
 
         displayPage.style.justifyContent = 'center';
@@ -494,7 +510,7 @@
         if(e) e.stopPropagation();
         displayPage.classList.remove('active');
         
-        // Show hamburger again
+        // [Fixed] Show hamburger again
         document.querySelector('.hamburger-btn').style.display = '';
 
         if(activeInterval) clearInterval(activeInterval);
@@ -541,7 +557,6 @@
         initTemplates();
 
         const urlParams = new URLSearchParams(window.location.search);
-        // Only load from LocalStorage if NO URL parameters are present
         if (!urlParams.has('mode') && !urlParams.has('t')) {
             loadAllSettings();
         } else {
