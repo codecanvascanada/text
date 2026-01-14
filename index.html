@@ -225,8 +225,8 @@
 
 <div id="display-page" onmousemove="handleUserActivity()" onclick="handleUserActivity()" ontouchstart="handleUserActivity()">
     <div id="display-controls">
-        <button class="overlay-btn" onclick="stopDisplay(event)">Edit / Stop</button>
-        <button class="overlay-btn" onclick="requestFullScreenOnly(event)">Full Screen</button>
+        <button class="overlay-btn" onclick="stopDisplay(event)">Edit</button>
+        <button class="overlay-btn" onclick="requestFullScreenOnly(event)">Full</button>
     </div>
     <div id="scrolling-text"></div>
     <div id="static-display"></div>
@@ -281,7 +281,6 @@
     }
 
     function applyPreset(type, txt, bg) {
-        // [Fixed] Banner IDs are now bannerColor/bannerBg
         document.getElementById(type + 'Color').value = txt;
         document.getElementById(type + 'Bg').value = bg;
     }
@@ -325,7 +324,7 @@
         if (!saved) return;
         const s = JSON.parse(saved);
 
-        // Banner (Loading into correct IDs)
+        // Banner
         if(s.b_text) document.getElementById('userInput').value = s.b_text;
         if(s.b_color) document.getElementById('bannerColor').value = s.b_color;
         if(s.b_bg) document.getElementById('bannerBg').value = s.b_bg;
@@ -363,6 +362,10 @@
 
         currentMode = mode;
         displayPage.classList.add('active');
+        
+        // Hide mobile hamburger when active
+        document.querySelector('.hamburger-btn').style.display = 'none';
+
         displayPage.style.justifyContent = 'center';
         displayPage.style.alignItems = 'center';
 
@@ -490,6 +493,10 @@
     function stopDisplay(e) {
         if(e) e.stopPropagation();
         displayPage.classList.remove('active');
+        
+        // Show hamburger again
+        document.querySelector('.hamburger-btn').style.display = '';
+
         if(activeInterval) clearInterval(activeInterval);
         displayPage.style.backgroundColor = '';
         if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); }
