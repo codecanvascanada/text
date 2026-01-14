@@ -3,280 +3,578 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro LED Banner - Free Online Cheer Tool</title>
+    <title>Pro LED Banner - Multi Tool</title>
     <style>
-        :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); overflow-x: hidden; }
+        :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; --track: #e1e4e8; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); overflow-x: hidden; scroll-behavior: smooth; }
 
-        #header-fixed {
-            position: sticky; top: 0; width: 100%; background: var(--bg); z-index: 200;
-            display: flex; flex-direction: column; align-items: center; padding-top: 20px;
-        }
-        .hero-section { text-align: center; margin-bottom: 10px; }
-        .hero-section h1 { margin: 0; font-size: 1.5rem; }
-        .hero-section p { margin: 5px 0 0; color: #666; font-size: 0.9rem; }
+        /* [Header] */
+        #header-area { text-align: center; position: sticky; top: 0; background: var(--bg); z-index: 150; padding: 20px 0 10px; }
+        .hero-section h1 { margin: 0; font-size: 2rem; color: var(--dark); font-weight: 900; letter-spacing: -1px; }
+        .hero-section p { margin: 8px 0 0; color: #666; font-size: 1rem; }
 
-        .ad-placeholder { background: #e1e4e8; color: #999; display: flex; align-items: center; justify-content: center; font-size: 12px; text-align: center; border: 1px dashed #ccc; box-sizing: border-box; }
-        .top-ad-area { width: 100%; max-width: 728px; height: 90px; margin: 10px auto; }
+        /* [Layout] */
+        .app-wrapper { display: flex; align-items: flex-start; justify-content: center; gap: 30px; max-width: 1000px; margin: 0 auto; padding: 20px 20px 100px; box-sizing: border-box; min-height: 100vh; }
+        .content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
 
-        .side-ad-area { position: fixed; top: 200px; width: 160px; height: 600px; display: none; z-index: 50; }
-        @media (min-width: 1200px) {
-            .side-ad-area { display: flex; }
-            .left-ad { left: calc(50% - 460px); }
-            .right-ad { right: calc(50% - 460px); }
-        }
+        /* [Right Sidebar] */
+        .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 120px; background: white; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 1000; height: fit-content; }
+        .brand-title { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0; display: block; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px; color: #555; text-decoration: none; border-radius: 10px; font-weight: 600; transition: 0.2s; font-size: 0.9rem; }
+        .nav-link:hover { background-color: #fff0ec; color: var(--primary); transform: translateX(5px); }
+        .close-btn { display: none; text-align: right; font-size: 1.5rem; cursor: pointer; margin-bottom: 10px; }
 
-        #landing-page { display: flex; flex-direction: column; align-items: center; padding: 0 20px 40px; box-sizing: border-box; }
-        .intro-text, .config-card, .seo-content, .scenarios-container { width: 100%; max-width: 500px; box-sizing: border-box; }
+        /* [Components] */
+        .config-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; scroll-margin-top: 180px; }
+        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .card-title { font-size: 1.2rem; font-weight: 800; color: var(--dark); margin: 0; }
+        .card-icon { font-size: 1.5rem; }
 
-        .intro-text { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .intro-text h2 { margin: 0 0 10px; font-size: 1.1rem; color: var(--dark); }
-        .intro-text p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.5; }
-
-        .config-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; z-index: 100; margin-top: 20px; }
         .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); }
-        input[type="text"] { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 1.1rem; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); font-size: 0.9rem; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 1.1rem; font-family: monospace; }
+        .timer-inputs { display: flex; gap: 10px; }
+        .timer-inputs div { flex: 1; }
+        .timer-inputs input { text-align: center; }
 
-        /* Presets Grid */
-        .presets-label { font-weight: bold; color: var(--dark); margin-bottom: 10px; display: block; }
-        .preset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
-        .preset-btn { border: 2px solid #eee; padding: 10px 5px; border-radius: 10px; cursor: pointer; text-align: center; font-size: 0.75rem; font-weight: bold; transition: all 0.2s; background: #fff; }
-        .preset-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .presets-label { font-weight: bold; color: var(--dark); margin-bottom: 10px; display: block; font-size: 0.9rem; }
+        /* 12 Templates Grid */
+        .preset-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+        .preset-btn { border: 2px solid #eee; padding: 8px 2px; border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.7rem; font-weight: bold; background: #fff; transition: transform 0.2s; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .preset-btn:hover { transform: translateY(-2px); border-color: var(--primary); }
 
-        /* Settings Grid */
         .setting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        @media (max-width: 600px) { .setting-grid { grid-template-columns: 1fr; gap: 10px; } }
-
-        /* Range Slider Style */
-        .range-wrapper { margin-bottom: 20px; }
-        .range-wrapper label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); }
-        input[type="range"] { width: 100%; cursor: pointer; }
-
         input[type="color"] { -webkit-appearance: none; appearance: none; width: 100%; height: 45px; cursor: pointer; background: none; border: 2px solid #ddd; border-radius: 10px; padding: 2px; box-sizing: border-box; }
         input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; }
 
-        .btn-main { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
+        .range-wrapper { margin-bottom: 20px; }
+        .range-wrapper label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); font-size: 0.9rem; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; margin: 10px 0; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: var(--track); border-radius: 5px; }
+        input[type="range"]::-webkit-slider-thumb { height: 24px; width: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; -webkit-appearance: none; margin-top: -8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid #fff; }
+
+        .btn-main { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
+        .btn-main:hover { background: #c23616; transform: translateY(-2px); }
         .btn-share { background: #44bd32; margin-top: 10px; }
 
-        /* Scenarios Section Styles */
-        .scenarios-container { margin-top: 30px; }
-        .scenarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .scenario-item { background: white; padding: 10px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        .scenario-item:hover { transform: translateY(-3px); }
-        .scenario-item img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 8px; border: 1px solid #eee; }
-        .scenario-item span { font-size: 0.8rem; font-weight: bold; color: #555; display: block; line-height: 1.2; }
-        .section-title { font-size: 1.1rem; color: var(--dark); margin: 0 0 15px 0; font-weight: bold; }
-
-        .seo-content { margin-top: 30px; line-height: 1.8; color: #666; padding: 25px; background: #fff; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .seo-content h3 { margin-top: 0; color: var(--dark); font-size: 1.1rem; }
-
-        #display-page { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 1000; overflow: hidden; }
-        #display-page.active { display: flex; align-items: center; justify-content: center; }
+        /* [Display Page] */
+        #display-page { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 2000; overflow: hidden; align-items: center; justify-content: center; }
+        #display-page.active { display: flex; }
         #display-page.hide-cursor { cursor: none; }
+        
         #scrolling-text { white-space: nowrap; font-weight: 900; line-height: 1; position: absolute; left: 0; will-change: transform; transition: margin-top 0.3s; }
-        #display-controls { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 1100; transition: opacity 0.5s, visibility 0.5s; opacity: 0; visibility: hidden; }
-        #display-controls.visible { opacity: 1; visibility: visible; }
-        .overlay-btn { padding: 12px 20px; background: rgba(255, 255, 255, 0.25); color: white; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(8px); font-weight: bold; }
+        #static-display { width: 100%; text-align: center; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; transition: margin-top 0.3s, font-size 0.3s; }
 
+        #display-controls { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 2100; transition: opacity 0.5s; opacity: 0; visibility: hidden; }
+        #display-controls.visible { opacity: 1; visibility: visible; }
+        .overlay-btn { padding: 12px 25px; background: rgba(255, 255, 255, 0.2); color: white; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(5px); font-weight: bold; }
+
+        /* Mobile */
+        .hamburger-btn { display: none; position: fixed; top: 20px; right: 20px; z-index: 6000; background: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 5000; }
+        
+        @media (max-width: 850px) {
+            .app-wrapper { display: block; padding: 15px; }
+            .sidebar { position: fixed; top: 0 !important; right: -280px; width: 260px; height: 100vh; transition: right 0.3s; border-radius: 0; z-index: 7000; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
+            .sidebar.active { right: 0; } 
+            .menu-overlay.active { display: block; }
+            .hamburger-btn, .close-btn { display: block; }
+            .preset-grid { grid-template-columns: repeat(3, 1fr); }
+        }
         @keyframes scrollAnim { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
     </style>
 </head>
 <body>
 
-    <div id="landing-page">
-        <div id="header-fixed">
+<button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+<div class="app-wrapper">
+    <main class="content-area">
+        <div id="header-area">
             <div class="hero-section">
                 <h1>📣 Pro LED Banner</h1>
-                <p>Enter text and share your cheering board.</p>
+                <p>All-in-one Screen Tool</p>
             </div>
-            <div class="ad-placeholder top-ad-area">AD: TOP BANNER (728x90)</div>
         </div>
 
-        <div class="ad-placeholder side-ad-area left-ad">AD: SIDE</div>
-        <div class="ad-placeholder side-ad-area right-ad">AD: SIDE</div>
-
-        <div class="intro-text">
-            <h2>How to use & Tips</h2>
-            <p>Perfect for concerts, sports events, and airport pickups. A free web banner for any situation.</p>
-        </div>
-
-        <div class="config-card">
+        <div class="config-card" id="section-banner">
+            <div class="card-header"><span class="card-icon">💬</span><h3 class="card-title">1. Text Banner</h3></div>
+            
             <div class="input-group">
-                <label>Display Text</label>
-                <input type="text" id="userInput" placeholder="Enter message here" value="CHEER UP!">
+                <label>Message</label>
+                <input type="text" id="userInput" value="CHEER UP!">
             </div>
 
-            <label class="presets-label">Quick Templates</label>
-            <div class="preset-grid">
-                <div class="preset-btn" onclick="applyPreset('#00FF00', '#000000', 70, 5)" style="color:#00FF00; background:#000;">Neon</div>
-                <div class="preset-btn" onclick="applyPreset('#FFFFFF', '#E84118', 65, 6)" style="color:#E84118; background:#FFF;">Red</div>
-                <div class="preset-btn" onclick="applyPreset('#000000', '#FBC531', 80, 4)" style="color:#000; background:#FBC531;">Warning</div>
-                <div class="preset-btn" onclick="applyPreset('#44BD32', '#F5F6FA', 70, 5)" style="color:#44BD32; background:#F5F6FA;">Mint</div>
-                <div class="preset-btn" onclick="applyPreset('#FFFFFF', '#0097E6', 75, 5)" style="color:#0097E6; background:#FFF;">Ocean</div>
-                <div class="preset-btn" onclick="applyPreset('#FBC531', '#2F3640', 70, 3)" style="color:#FBC531; background:#2F3640;">Gold</div>
-            </div>
-            
+            <label class="presets-label">12 High-Contrast Templates</label>
+            <div class="preset-grid" id="preset-banner">
+                </div>
+
             <div class="setting-grid">
-                <div><label>Text Color</label><input type="color" id="textColor" value="#ffffff"></div>
-                <div><label>Background</label><input type="color" id="bgColor" value="#000000"></div>
+                <div><label>Text</label><input type="color" id="bannerColor" value="#ffffff"></div>
+                <div><label>Bg</label><input type="color" id="bannerBg" value="#000000"></div>
             </div>
-            
             <div class="setting-grid">
                 <div><label>Size</label><input type="range" id="sizeSlider" min="10" max="100" value="70"></div>
                 <div><label>Speed</label><input type="range" id="speedSlider" min="1" max="10" value="5"></div>
             </div>
-
             <div class="range-wrapper">
                 <label>Vertical Position (Up)</label>
                 <input type="range" id="vPosSlider" min="0" max="30" value="0" step="1">
             </div>
-
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size: 0.9rem; margin-bottom: 15px;">
-                <input type="checkbox" id="scrollCheck" checked style="width:18px; height:18px;"> Enable Animation
+                <input type="checkbox" id="scrollCheck" checked> Enable Animation
             </label>
-
-            <div class="ad-placeholder" style="width: 100%; height: 100px; margin-bottom: 15px; border-radius: 10px; background: #f0f2f5;">
-                AD: BUTTON TOP NATIVE
-            </div>
-            <button class="btn-main" onclick="startDisplay()">START BANNER</button>
-            <button class="btn-main btn-share" onclick="copyShareUrl()">SHARE LINK</button>
+            <button class="btn-main" onclick="startMode('banner')">Start Banner</button>
+            <button class="btn-main btn-share" onclick="copyShareUrl('banner')">Share Link</button>
         </div>
 
-        <div class="scenarios-container">
-            <h3 class="section-title">Useful in any situation</h3>
-            <div class="scenarios-grid">
-                <div class="scenario-item">
-                    <img src="concert.png" alt="Concert Cheering">
-                    <span>Concert & Cheering</span>
-                </div>
-                <div class="scenario-item">
-                    <img src="car.png" alt="Car Emergency">
-                    <span>Roadside Emergency</span>
-                </div>
-                <div class="scenario-item">
-                    <img src="airport.png" alt="Airport Pickup">
-                    <span>Airport Pickup</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="seo-content">
-            <h3>Best Settings for Visibility</h3>
-            <p>For maximum visibility, we recommend high-contrast combinations like yellow text on a black background. Adjust the speed according to the text length so others can read it easily.</p>
-        </div>
-    </div>
-
-    <div id="display-page" onmousemove="handleUserActivity()" onclick="handleUserActivity()" ontouchstart="handleUserActivity()">
-        <div id="display-controls">
-            <button class="overlay-btn" onclick="stopDisplay(event)">Edit</button>
-            <button class="overlay-btn" onclick="requestFullScreenOnly(event)">Full Screen</button>
-        </div>
-        <div id="scrolling-text"></div>
-    </div>
-
-    <script>
-        const landingPage = document.getElementById('landing-page');
-        const displayPage = document.getElementById('display-page');
-        const textElement = document.getElementById('scrolling-text');
-        const displayControls = document.getElementById('display-controls');
-        let hideTimer;
-
-        function applyPreset(txt, bg, size, speed) {
-            document.getElementById('textColor').value = txt;
-            document.getElementById('bgColor').value = bg;
-            document.getElementById('sizeSlider').value = size;
-            document.getElementById('speedSlider').value = speed;
-            document.getElementById('vPosSlider').value = 0; // Reset position on preset
-        }
-
-        function handleUserActivity() {
-            if (!displayPage.classList.contains('active')) return;
-            displayControls.classList.add('visible');
-            displayPage.classList.remove('hide-cursor');
-            clearTimeout(hideTimer);
-            hideTimer = setTimeout(() => {
-                displayControls.classList.remove('visible');
-                displayPage.classList.add('hide-cursor');
-            }, 3000);
-        }
-
-        function startDisplay() {
-            updateDisplayText();
-            landingPage.style.display = 'none';
-            displayPage.classList.add('active');
-            handleUserActivity();
-            requestFullScreenOnly();
-        }
-
-        function updateDisplayText() {
-            const text = document.getElementById('userInput').value;
-            textElement.innerText = text;
-            textElement.style.color = document.getElementById('textColor').value;
-            displayPage.style.backgroundColor = document.getElementById('bgColor').value;
-            textElement.style.fontSize = document.getElementById('sizeSlider').value + "vh";
+        <div class="config-card" id="section-clock">
+            <div class="card-header"><span class="card-icon">🕒</span><h3 class="card-title">2. Digital Clock</h3></div>
             
-            // New vertical position logic
-            const vPos = document.getElementById('vPosSlider').value;
-            textElement.style.marginTop = `-${vPos}vh`; // Move up by adding negative margin
+            <label class="presets-label">12 High-Contrast Templates</label>
+            <div class="preset-grid" id="preset-clock">
+                 </div>
 
-            textElement.style.animation = 'none';
-            void textElement.offsetWidth;
+            <div class="setting-grid">
+                <div><label>Text</label><input type="color" id="clockColor" value="#00ff00"></div>
+                <div><label>Bg</label><input type="color" id="clockBg" value="#000000"></div>
+            </div>
+            <div class="range-wrapper">
+                <label>Size</label><input type="range" id="clockSize" min="10" max="50" value="25">
+            </div>
+            <div class="range-wrapper">
+                <label>Vertical Position (Up)</label>
+                <input type="range" id="clockVPos" min="0" max="30" value="0" step="1">
+            </div>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size: 0.9rem; margin-bottom: 15px;">
+                <input type="checkbox" id="clock24" style="width:18px; height:18px;"> Use 24-Hour Format (13:00)
+            </label>
+            <button class="btn-main" onclick="startMode('clock')">Show Clock</button>
+            <button class="btn-main btn-share" onclick="copyShareUrl('clock')">Share Link</button>
+        </div>
 
-            if(document.getElementById('scrollCheck').checked) {
-                displayPage.style.justifyContent = 'flex-start';
-                const speed = document.getElementById('speedSlider').value;
-                const duration = Math.max(5, text.length * 0.5 + (11 - speed));
-                textElement.style.animation = `scrollAnim ${duration}s linear infinite`;
-            } else {
-                displayPage.style.justifyContent = 'center';
-                textElement.style.position = 'relative';
-                textElement.style.transform = 'none';
+        <div class="config-card" id="section-timer">
+            <div class="card-header"><span class="card-icon">⏳</span><h3 class="card-title">3. Timer</h3></div>
+            <div class="input-group">
+                <label>Set Duration (HH : MM : SS)</label>
+                <div class="timer-inputs">
+                    <input type="number" id="timerH" placeholder="00" min="0" max="99">
+                    <input type="number" id="timerM" placeholder="00" min="0" max="59">
+                    <input type="number" id="timerS" placeholder="00" min="0" max="59">
+                </div>
+            </div>
+
+            <label class="presets-label">12 High-Contrast Templates</label>
+            <div class="preset-grid" id="preset-timer">
+                 </div>
+
+            <div class="setting-grid">
+                <div><label>Text</label><input type="color" id="timerColor" value="#ff0000"></div>
+                <div><label>Bg</label><input type="color" id="timerBg" value="#000000"></div>
+            </div>
+            <div class="range-wrapper">
+                <label>Size</label><input type="range" id="timerSize" min="10" max="50" value="25">
+            </div>
+            <div class="range-wrapper">
+                <label>Vertical Position (Up)</label>
+                <input type="range" id="timerVPos" min="0" max="30" value="0" step="1">
+            </div>
+            <button class="btn-main" onclick="startMode('timer')">Start Timer</button>
+            <button class="btn-main btn-share" onclick="copyShareUrl('timer')">Share Link</button>
+        </div>
+
+        <div class="config-card" id="section-stopwatch">
+            <div class="card-header"><span class="card-icon">⏱️</span><h3 class="card-title">4. Stopwatch</h3></div>
+            
+            <label class="presets-label">12 High-Contrast Templates</label>
+            <div class="preset-grid" id="preset-stop">
+                 </div>
+
+            <div class="setting-grid">
+                <div><label>Text</label><input type="color" id="stopColor" value="#ffffff"></div>
+                <div><label>Bg</label><input type="color" id="stopBg" value="#000000"></div>
+            </div>
+            <div class="range-wrapper">
+                <label>Size</label><input type="range" id="stopSize" min="10" max="50" value="25">
+            </div>
+            <div class="range-wrapper">
+                <label>Vertical Position (Up)</label>
+                <input type="range" id="stopVPos" min="0" max="30" value="0" step="1">
+            </div>
+            <button class="btn-main" onclick="startMode('stopwatch')">Start Stopwatch</button>
+            <button class="btn-main btn-share" onclick="copyShareUrl('stop')">Share Link</button>
+        </div>
+
+    </main>
+
+    <nav class="sidebar" id="sidebarMenu">
+        <div class="close-btn" onclick="toggleMenu()">✕</div>
+        <div class="brand-title">Menu</div>
+        <div class="nav-menu">
+            <a href="#section-banner" class="nav-link">💬 1. Banner</a>
+            <a href="#section-clock" class="nav-link">🕒 2. Clock</a>
+            <a href="#section-timer" class="nav-link">⏳ 3. Timer</a>
+            <a href="#section-stopwatch" class="nav-link">⏱️ 4. Stopwatch</a>
+            <div style="height:1px; background:#eee; margin:5px 0;"></div>
+            <a href="#" class="nav-link" onclick="window.scrollTo(0,0); toggleMenu(); return false;">⬆️ Top</a>
+        </div>
+    </nav>
+</div>
+
+<div id="display-page" onmousemove="handleUserActivity()" onclick="handleUserActivity()" ontouchstart="handleUserActivity()">
+    <div id="display-controls">
+        <button class="overlay-btn" onclick="stopDisplay(event)">Edit / Stop</button>
+        <button class="overlay-btn" onclick="requestFullScreenOnly(event)">Full Screen</button>
+    </div>
+    <div id="scrolling-text"></div>
+    <div id="static-display"></div>
+</div>
+
+<script>
+    const displayPage = document.getElementById('display-page');
+    const scrollTextEl = document.getElementById('scrolling-text');
+    const staticTextEl = document.getElementById('static-display');
+    const displayControls = document.getElementById('display-controls');
+    
+    let hideTimer;
+    let activeInterval = null;
+    let currentMode = null;
+    let timerEndTime = 0;
+    let stopwatchStartTime = 0;
+
+    // --- 12 High-Contrast Templates Definition ---
+    const templates = [
+        { name: "Neon", t: "#00FF00", b: "#000000" },
+        { name: "Red", t: "#FFFFFF", b: "#E84118" },
+        { name: "Warn", t: "#000000", b: "#FBC531" },
+        { name: "Ocean", t: "#FFFFFF", b: "#0097E6" },
+        { name: "Mint", t: "#44BD32", b: "#F5F6FA" },
+        { name: "Pink", t: "#FF007F", b: "#222222" },
+        { name: "Ikea", t: "#FFDA00", b: "#0051BA" },
+        { name: "Mono", t: "#000000", b: "#FFFFFF" },
+        { name: "Night", t: "#FFFFFF", b: "#000000" },
+        { name: "Cyber", t: "#00FFFF", b: "#2F3640" },
+        { name: "Purple", t: "#FFFFFF", b: "#8e44ad" },
+        { name: "Orange", t: "#FFFFFF", b: "#e67e22" }
+    ];
+
+    function toggleMenu() {
+        if(window.innerWidth <= 850) {
+            document.getElementById('sidebarMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+    }
+
+    // Populate Templates Dynamically
+    function initTemplates() {
+        ['banner', 'clock', 'timer', 'stop'].forEach(mode => {
+            const container = document.getElementById('preset-' + mode);
+            if(!container) return;
+            let html = '';
+            templates.forEach(tpl => {
+                html += `<div class="preset-btn" onclick="applyPreset('${mode}', '${tpl.t}', '${tpl.b}')" style="color:${tpl.t}; background:${tpl.b}; border-color:${tpl.b === '#FFFFFF' || tpl.b === '#F5F6FA' ? '#ddd' : tpl.b}">${tpl.name}</div>`;
+            });
+            container.innerHTML = html;
+        });
+    }
+
+    function applyPreset(type, txt, bg) {
+        // [Fixed] Banner IDs are now bannerColor/bannerBg
+        document.getElementById(type + 'Color').value = txt;
+        document.getElementById(type + 'Bg').value = bg;
+    }
+
+    // --- SAVE & LOAD SETTINGS (Local Storage) ---
+    function saveAllSettings() {
+        const settings = {
+            // Banner (using correct IDs)
+            b_text: document.getElementById('userInput').value,
+            b_color: document.getElementById('bannerColor').value,
+            b_bg: document.getElementById('bannerBg').value,
+            b_size: document.getElementById('sizeSlider').value,
+            b_speed: document.getElementById('speedSlider').value,
+            b_vpos: document.getElementById('vPosSlider').value,
+            b_anim: document.getElementById('scrollCheck').checked,
+            // Clock
+            c_color: document.getElementById('clockColor').value,
+            c_bg: document.getElementById('clockBg').value,
+            c_size: document.getElementById('clockSize').value,
+            c_vpos: document.getElementById('clockVPos').value,
+            c_24: document.getElementById('clock24').checked,
+            // Timer
+            t_color: document.getElementById('timerColor').value,
+            t_bg: document.getElementById('timerBg').value,
+            t_size: document.getElementById('timerSize').value,
+            t_vpos: document.getElementById('timerVPos').value,
+            t_h: document.getElementById('timerH').value,
+            t_m: document.getElementById('timerM').value,
+            t_s: document.getElementById('timerS').value,
+            // Stopwatch
+            s_color: document.getElementById('stopColor').value,
+            s_bg: document.getElementById('stopBg').value,
+            s_size: document.getElementById('stopSize').value,
+            s_vpos: document.getElementById('stopVPos').value
+        };
+        localStorage.setItem('proLedSettings', JSON.stringify(settings));
+    }
+
+    function loadAllSettings() {
+        const saved = localStorage.getItem('proLedSettings');
+        if (!saved) return;
+        const s = JSON.parse(saved);
+
+        // Banner (Loading into correct IDs)
+        if(s.b_text) document.getElementById('userInput').value = s.b_text;
+        if(s.b_color) document.getElementById('bannerColor').value = s.b_color;
+        if(s.b_bg) document.getElementById('bannerBg').value = s.b_bg;
+        if(s.b_size) document.getElementById('sizeSlider').value = s.b_size;
+        if(s.b_speed) document.getElementById('speedSlider').value = s.b_speed;
+        if(s.b_vpos) document.getElementById('vPosSlider').value = s.b_vpos;
+        if(s.b_anim !== undefined) document.getElementById('scrollCheck').checked = s.b_anim;
+        
+        // Clock
+        if(s.c_color) document.getElementById('clockColor').value = s.c_color;
+        if(s.c_bg) document.getElementById('clockBg').value = s.c_bg;
+        if(s.c_size) document.getElementById('clockSize').value = s.c_size;
+        if(s.c_vpos) document.getElementById('clockVPos').value = s.c_vpos;
+        if(s.c_24 !== undefined) document.getElementById('clock24').checked = s.c_24;
+
+        // Timer
+        if(s.t_color) document.getElementById('timerColor').value = s.t_color;
+        if(s.t_bg) document.getElementById('timerBg').value = s.t_bg;
+        if(s.t_size) document.getElementById('timerSize').value = s.t_size;
+        if(s.t_vpos) document.getElementById('timerVPos').value = s.t_vpos;
+        if(s.t_h) document.getElementById('timerH').value = s.t_h;
+        if(s.t_m) document.getElementById('timerM').value = s.t_m;
+        if(s.t_s) document.getElementById('timerS').value = s.t_s;
+
+        // Stop
+        if(s.s_color) document.getElementById('stopColor').value = s.s_color;
+        if(s.s_bg) document.getElementById('stopBg').value = s.s_bg;
+        if(s.s_size) document.getElementById('stopSize').value = s.s_size;
+        if(s.s_vpos) document.getElementById('stopVPos').value = s.s_vpos;
+    }
+
+    // --- Display Logic ---
+    function startMode(mode) {
+        saveAllSettings(); // Auto-save
+
+        currentMode = mode;
+        displayPage.classList.add('active');
+        displayPage.style.justifyContent = 'center';
+        displayPage.style.alignItems = 'center';
+
+        handleUserActivity();
+        requestFullScreenOnly();
+
+        scrollTextEl.style.display = 'none';
+        staticTextEl.style.display = 'none';
+        if(activeInterval) clearInterval(activeInterval);
+
+        if (mode === 'banner') setupBanner();
+        else if (mode === 'clock') setupClock();
+        else if (mode === 'timer') setupTimer();
+        else if (mode === 'stopwatch') setupStopwatch();
+    }
+
+    function setupBanner() {
+        scrollTextEl.style.display = 'block';
+        const text = document.getElementById('userInput').value;
+        const color = document.getElementById('bannerColor').value;
+        const bg = document.getElementById('bannerBg').value;
+        const size = document.getElementById('sizeSlider').value;
+        const vPos = document.getElementById('vPosSlider').value;
+        
+        displayPage.style.backgroundColor = bg;
+        scrollTextEl.innerText = text;
+        scrollTextEl.style.color = color;
+        scrollTextEl.style.fontSize = size + "vh";
+        scrollTextEl.style.marginTop = `-${vPos}vh`;
+        
+        scrollTextEl.style.animation = 'none';
+        void scrollTextEl.offsetWidth;
+
+        if(document.getElementById('scrollCheck').checked) {
+            displayPage.style.justifyContent = 'flex-start'; 
+            const speed = document.getElementById('speedSlider').value;
+            const duration = Math.max(5, text.length * 0.5 + (11 - speed));
+            scrollTextEl.style.animation = `scrollAnim ${duration}s linear infinite`;
+        } else {
+            scrollTextEl.style.position = 'relative';
+            scrollTextEl.style.transform = 'none';
+        }
+    }
+
+    function setupClock() {
+        staticTextEl.style.display = 'block';
+        applyStaticStyle('clock');
+        function tick() {
+            const now = new Date();
+            const use24 = document.getElementById('clock24').checked;
+            staticTextEl.innerText = now.toLocaleTimeString('en-US', { hour12: !use24 });
+        }
+        tick();
+        activeInterval = setInterval(tick, 1000);
+    }
+
+    function setupTimer() {
+        staticTextEl.style.display = 'block';
+        applyStaticStyle('timer');
+        const h = parseInt(document.getElementById('timerH').value) || 0;
+        const m = parseInt(document.getElementById('timerM').value) || 0;
+        const s = parseInt(document.getElementById('timerS').value) || 0;
+        const totalSeconds = (h * 3600) + (m * 60) + s;
+        if(totalSeconds <= 0) { alert("Please set a time first!"); stopDisplay(); return; }
+
+        timerEndTime = Date.now() + (totalSeconds * 1000);
+        function tick() {
+            const now = Date.now();
+            const left = timerEndTime - now;
+            if (left <= 0) {
+                staticTextEl.innerText = "00:00:00"; clearInterval(activeInterval);
+                let flash = false; const bg = document.getElementById('timerBg').value;
+                activeInterval = setInterval(() => { displayPage.style.backgroundColor = flash ? bg : 'red'; flash = !flash; }, 500);
+                return;
             }
+            const hh = Math.floor(left / 3600000); const mm = Math.floor((left % 3600000) / 60000); const ss = Math.floor((left % 60000) / 1000);
+            staticTextEl.innerText = String(hh).padStart(2,'0') + ":" + String(mm).padStart(2,'0') + ":" + String(ss).padStart(2,'0');
         }
+        tick();
+        activeInterval = setInterval(tick, 1000);
+    }
 
-        function requestFullScreenOnly(e) {
-            if(e) e.stopPropagation();
-            const docEl = document.documentElement;
-            const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
-            if(requestFS) requestFS.call(docEl).catch(() => {});
+    function setupStopwatch() {
+        staticTextEl.style.display = 'block';
+        applyStaticStyle('stop');
+        stopwatchStartTime = Date.now();
+        function tick() {
+            const now = Date.now(); const diff = now - stopwatchStartTime;
+            const hh = Math.floor(diff / 3600000); const mm = Math.floor((diff % 3600000) / 60000); const ss = Math.floor((diff % 60000) / 1000);
+            staticTextEl.innerText = String(hh).padStart(2,'0') + ":" + String(mm).padStart(2,'0') + ":" + String(ss).padStart(2,'0');
         }
+        tick();
+        activeInterval = setInterval(tick, 1000);
+    }
 
-        function stopDisplay(e) {
-            if(e) e.stopPropagation();
-            displayPage.classList.remove('active');
-            landingPage.style.display = 'flex';
-            if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); }
-        }
+    function applyStaticStyle(prefix) {
+        const color = document.getElementById(prefix + 'Color').value;
+        const bg = document.getElementById(prefix + 'Bg').value;
+        const size = document.getElementById(prefix + 'Size').value;
+        const vPos = document.getElementById(prefix + 'VPos').value;
+        displayPage.style.backgroundColor = bg;
+        staticTextEl.style.color = color;
+        staticTextEl.style.fontSize = size + "vw";
+        staticTextEl.style.marginTop = `-${vPos}vh`;
+    }
 
-        function copyShareUrl() {
-            const params = new URLSearchParams();
+    function handleUserActivity() {
+        if (!displayPage.classList.contains('active')) return;
+        displayControls.classList.add('visible');
+        displayPage.classList.remove('hide-cursor');
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+            displayControls.classList.remove('visible');
+            displayPage.classList.add('hide-cursor');
+        }, 3000);
+    }
+
+    function requestFullScreenOnly(e) {
+        if(e) e.stopPropagation();
+        const docEl = document.documentElement;
+        const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+        if(requestFS) requestFS.call(docEl).catch(() => {});
+    }
+
+    function stopDisplay(e) {
+        if(e) e.stopPropagation();
+        displayPage.classList.remove('active');
+        if(activeInterval) clearInterval(activeInterval);
+        displayPage.style.backgroundColor = '';
+        if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); }
+    }
+
+    function copyShareUrl(mode) {
+        const params = new URLSearchParams();
+        params.set('mode', mode);
+        if(mode === 'banner') {
             params.set('t', document.getElementById('userInput').value);
-            params.set('c', document.getElementById('textColor').value);
-            params.set('b', document.getElementById('bgColor').value);
+            params.set('c', document.getElementById('bannerColor').value);
+            params.set('b', document.getElementById('bannerBg').value);
             params.set('s', document.getElementById('sizeSlider').value);
             params.set('v', document.getElementById('speedSlider').value);
-            params.set('vp', document.getElementById('vPosSlider').value); // Save vertical pos
+            params.set('vp', document.getElementById('vPosSlider').value);
             params.set('sc', document.getElementById('scrollCheck').checked);
-            const shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
-            navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied to clipboard!'));
+        } else if(mode === 'clock') {
+            params.set('c', document.getElementById('clockColor').value);
+            params.set('b', document.getElementById('clockBg').value);
+            params.set('s', document.getElementById('clockSize').value);
+            params.set('vp', document.getElementById('clockVPos').value);
+            params.set('h24', document.getElementById('clock24').checked);
+        } else if(mode === 'timer') {
+            params.set('c', document.getElementById('timerColor').value);
+            params.set('b', document.getElementById('timerBg').value);
+            params.set('s', document.getElementById('timerSize').value);
+            params.set('vp', document.getElementById('timerVPos').value);
+            params.set('h', document.getElementById('timerH').value);
+            params.set('m', document.getElementById('timerM').value);
+            params.set('ss', document.getElementById('timerS').value);
+        } else if(mode === 'stop') {
+            params.set('c', document.getElementById('stopColor').value);
+            params.set('b', document.getElementById('stopBg').value);
+            params.set('s', document.getElementById('stopSize').value);
+            params.set('vp', document.getElementById('stopVPos').value);
         }
+        const shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
+        navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied! Open on any device to see this setup.'));
+    }
 
-        window.onload = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('t')) {
-                document.getElementById('userInput').value = urlParams.get('t');
-                document.getElementById('textColor').value = urlParams.get('c');
-                document.getElementById('bgColor').value = urlParams.get('b');
-                document.getElementById('sizeSlider').value = urlParams.get('s');
-                document.getElementById('speedSlider').value = urlParams.get('v');
+    window.onload = () => {
+        initTemplates();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        // Only load from LocalStorage if NO URL parameters are present
+        if (!urlParams.has('mode') && !urlParams.has('t')) {
+            loadAllSettings();
+        } else {
+            const mode = urlParams.get('mode') || (urlParams.has('t') ? 'banner' : null);
+            if(mode === 'banner') {
+                if(urlParams.has('t')) document.getElementById('userInput').value = urlParams.get('t');
+                if(urlParams.has('c')) document.getElementById('bannerColor').value = urlParams.get('c');
+                if(urlParams.has('b')) document.getElementById('bannerBg').value = urlParams.get('b');
+                if(urlParams.has('s')) document.getElementById('sizeSlider').value = urlParams.get('s');
+                if(urlParams.has('v')) document.getElementById('speedSlider').value = urlParams.get('v');
                 if(urlParams.has('vp')) document.getElementById('vPosSlider').value = urlParams.get('vp');
-                document.getElementById('scrollCheck').checked = urlParams.get('sc') === 'true';
-                startDisplay();
+                if(urlParams.has('sc')) document.getElementById('scrollCheck').checked = urlParams.get('sc') === 'true';
+                startMode('banner');
+            } else if(mode === 'clock') {
+                if(urlParams.has('c')) document.getElementById('clockColor').value = urlParams.get('c');
+                if(urlParams.has('b')) document.getElementById('clockBg').value = urlParams.get('b');
+                if(urlParams.has('s')) document.getElementById('clockSize').value = urlParams.get('s');
+                if(urlParams.has('vp')) document.getElementById('clockVPos').value = urlParams.get('vp');
+                if(urlParams.has('h24')) document.getElementById('clock24').checked = urlParams.get('h24') === 'true';
+                startMode('clock');
+            } else if(mode === 'timer') {
+                if(urlParams.has('c')) document.getElementById('timerColor').value = urlParams.get('c');
+                if(urlParams.has('b')) document.getElementById('timerBg').value = urlParams.get('b');
+                if(urlParams.has('s')) document.getElementById('timerSize').value = urlParams.get('s');
+                if(urlParams.has('vp')) document.getElementById('timerVPos').value = urlParams.get('vp');
+                if(urlParams.has('h')) document.getElementById('timerH').value = urlParams.get('h');
+                if(urlParams.has('m')) document.getElementById('timerM').value = urlParams.get('m');
+                if(urlParams.has('ss')) document.getElementById('timerS').value = urlParams.get('ss');
+                startMode('timer');
+            } else if(mode === 'stop') {
+                if(urlParams.has('c')) document.getElementById('stopColor').value = urlParams.get('c');
+                if(urlParams.has('b')) document.getElementById('stopBg').value = urlParams.get('b');
+                if(urlParams.has('s')) document.getElementById('stopSize').value = urlParams.get('s');
+                if(urlParams.has('vp')) document.getElementById('stopVPos').value = urlParams.get('vp');
+                startMode('stopwatch');
             }
-        };
+        }
+    };
 
-        document.addEventListener('keydown', (e) => { if (e.key === "Escape" && displayPage.classList.contains('active')) stopDisplay(); });
-    </script>
+    document.addEventListener('keydown', (e) => { if (e.key === "Escape" && displayPage.classList.contains('active')) stopDisplay(); });
+</script>
 </body>
 </html>
