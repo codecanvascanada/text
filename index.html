@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Pro LED Banner - Multi Tool</title>
+    
+    <title>Pro LED Banner - Online Scroller, Clock, Timer</title>
+    <meta name="description" content="Free online LED Banner, Digital Clock, Countdown Timer, and Stopwatch. Perfect for concerts, airport pickups, and productivity. No app download required.">
+    <meta name="keywords" content="LED Banner, LED Scroller, Digital Clock, Online Timer, Stopwatch, Concert Tool, K-Pop Cheering">
+    <meta name="author" content="Pro LED Banner Service">
+    
+    <meta property="og:title" content="Pro LED Banner - All-in-One Screen Tool">
+    <meta property="og:description" content="Turn your phone into a bright LED sign, clock, or timer instantly.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-website-url.com">
+    <meta property="og:image" content="https://your-website-url.com/share-image.png">
+
     <style>
         :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; --track: #e1e4e8; }
         
@@ -23,8 +34,19 @@
         .hero-section p { margin: 8px 0 0; color: #666; font-size: 1rem; }
 
         /* [Layout] */
-        .app-wrapper { display: flex; align-items: flex-start; justify-content: center; gap: 30px; max-width: 1000px; margin: 0 auto; padding: 20px 20px 100px; box-sizing: border-box; min-height: 100vh; }
-        .content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
+        .app-wrapper { display: flex; align-items: flex-start; justify-content: center; gap: 30px; max-width: 1000px; margin: 0 auto; padding: 20px 20px 60px; box-sizing: border-box; min-height: 100vh; }
+        .content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 30px; }
+
+        /* [Intro & Scenarios] */
+        .intro-text { background: #fff; padding: 20px; border-radius: 15px; border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .intro-text h2 { margin: 0 0 10px; font-size: 1.1rem; color: var(--dark); }
+        .intro-text p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.5; }
+
+        .scenarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .scenario-item { background: white; padding: 15px 10px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s; cursor: pointer; }
+        .scenario-item:hover { transform: translateY(-3px); }
+        .scenario-item img { width: 100%; border-radius: 10px; aspect-ratio: 16/9; object-fit: cover; margin-bottom: 8px; border: 1px solid #eee; background: #eee; }
+        .scenario-item span { font-size: 0.85rem; font-weight: bold; color: #555; display: block; line-height: 1.2; }
 
         /* [Right Sidebar] */
         .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 120px; background: white; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 1000; height: fit-content; }
@@ -35,9 +57,10 @@
 
         /* [Components] */
         .config-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; scroll-margin-top: 180px; }
-        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .card-title { font-size: 1.2rem; font-weight: 800; color: var(--dark); margin: 0; }
+        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .card-title { font-size: 1.3rem; font-weight: 800; color: var(--dark); margin: 0; }
         .card-icon { font-size: 1.5rem; }
+        .feature-desc { margin: 0 0 20px 0; color: #888; font-size: 0.9rem; padding-left: 38px; }
 
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); font-size: 0.9rem; }
@@ -71,14 +94,18 @@
         .quote-en { font-size: 1.2rem; font-weight: bold; color: var(--dark); margin-bottom: 10px; line-height: 1.4; }
         .quote-ko { font-size: 1rem; color: #666; line-height: 1.4; }
 
+        /* [Footer] */
+        .site-footer { text-align: center; padding: 40px 0 20px; color: #999; font-size: 0.85rem; border-top: 1px solid #eee; margin-top: 40px; }
+        .site-footer a { color: #999; text-decoration: none; margin: 0 10px; }
+        .site-footer a:hover { color: var(--primary); text-decoration: underline; }
+
         /* [Display Page - Full Screen] */
         #display-page { 
             display: none; 
             position: fixed; top: 0; left: 0; 
-            width: 100%; height: 100%; /* Changed from vw/vh to % for stability */
             width: 100vw; height: 100vh;
             background: black; 
-            z-index: 9999; /* Highest Z-Index */
+            z-index: 9999; 
             overflow: hidden; 
             align-items: center; justify-content: center; 
         }
@@ -98,7 +125,6 @@
         
         @media (max-width: 850px) {
             .app-wrapper { display: block; padding: 15px; }
-            /* Hide sidebar off-screen properly */
             .sidebar { 
                 position: fixed; top: 0 !important; right: -280px; width: 260px; height: 100vh; 
                 z-index: 7000; box-shadow: -2px 0 10px rgba(0,0,0,0.1); 
@@ -108,6 +134,7 @@
             .menu-overlay.active { display: block; }
             .hamburger-btn, .close-btn { display: block; }
             .preset-grid { grid-template-columns: repeat(3, 1fr); }
+            .scenarios-grid { grid-template-columns: repeat(1, 1fr); } /* 1 column on mobile */
         }
         @keyframes scrollAnim { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
     </style>
@@ -120,15 +147,38 @@
 
 <div class="app-wrapper">
     <main class="content-area">
+        
         <div id="header-area">
             <div class="hero-section">
                 <h1>📣 Pro LED Banner</h1>
-                <p>All-in-one Screen Tool</p>
+                <p>All-in-one Screen Tool for Cheering & Time</p>
+            </div>
+        </div>
+
+        <div class="intro-text">
+            <h2>💡 How to use & Tips</h2>
+            <p>Select a feature below, set your colors, and press start. Perfect for concerts, sports events, and productivity.</p>
+            
+            <div class="scenarios-grid">
+                <div class="scenario-item" onclick="document.getElementById('section-banner').scrollIntoView({behavior:'smooth'})">
+                    <img src="concert.png" alt="Concert Cheering">
+                    <span>Concert Cheering</span>
+                </div>
+                <div class="scenario-item" onclick="document.getElementById('section-banner').scrollIntoView({behavior:'smooth'})">
+                    <img src="car.png" alt="Car Emergency">
+                    <span>Emergency Sign</span>
+                </div>
+                <div class="scenario-item" onclick="document.getElementById('section-banner').scrollIntoView({behavior:'smooth'})">
+                    <img src="airport.png" alt="Airport Pickup">
+                    <span>Airport Pickup</span>
+                </div>
             </div>
         </div>
 
         <div class="config-card" id="section-banner">
             <div class="card-header"><span class="card-icon">💬</span><h3 class="card-title">1. Text Banner</h3></div>
+            <p class="feature-desc">Use this for cheering, messages, or airport pickups with scrolling text.</p>
+            
             <div class="input-group">
                 <label>Message</label>
                 <input type="text" id="userInput" value="CHEER UP!">
@@ -156,6 +206,8 @@
 
         <div class="config-card" id="section-clock">
             <div class="card-header"><span class="card-icon">🕒</span><h3 class="card-title">2. Digital Clock</h3></div>
+            <p class="feature-desc">Turn your screen into a desk clock. Good for studying or office.</p>
+
             <label class="presets-label">12 High-Contrast Templates</label>
             <div class="preset-grid" id="preset-clock"></div>
             <div class="setting-grid">
@@ -178,6 +230,8 @@
 
         <div class="config-card" id="section-timer">
             <div class="card-header"><span class="card-icon">⏳</span><h3 class="card-title">3. Timer</h3></div>
+            <p class="feature-desc">Count down for workouts, cooking, exams, or presentations.</p>
+
             <div class="input-group">
                 <label>Set Duration (HH : MM : SS)</label>
                 <div class="timer-inputs">
@@ -205,6 +259,8 @@
 
         <div class="config-card" id="section-stopwatch">
             <div class="card-header"><span class="card-icon">⏱️</span><h3 class="card-title">4. Stopwatch</h3></div>
+            <p class="feature-desc">Measure elapsed time for laps, sports, or games.</p>
+
             <label class="presets-label">12 High-Contrast Templates</label>
             <div class="preset-grid" id="preset-stop"></div>
             <div class="setting-grid">
@@ -224,6 +280,8 @@
 
         <div class="config-card" id="section-quote">
             <div class="card-header"><span class="card-icon">📜</span><h3 class="card-title">5. Daily Quote</h3></div>
+            <p class="feature-desc">Get inspired with a random wise saying.</p>
+
             <div class="quote-display">
                 <div class="quote-en" id="q-en">Loading...</div>
                 <div class="quote-ko" id="q-ko"></div>
@@ -233,6 +291,16 @@
                 <button class="btn-main" onclick="setBannerToQuote()">Show on Banner</button>
             </div>
         </div>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Pro LED Banner. All rights reserved.</p>
+            <p>
+                <a href="#">Contact Us</a> | 
+                <a href="#">Privacy Policy</a> | 
+                <a href="#">Terms of Service</a>
+            </p>
+        </footer>
+
     </main>
 
     <nav class="sidebar" id="sidebarMenu">
@@ -403,14 +471,15 @@
 
     // --- Display Logic ---
     function startMode(mode) {
-        saveAllSettings(); // Auto-save
+        saveAllSettings(); 
 
         currentMode = mode;
         displayPage.classList.add('active');
         
-        // Hide hamburger menu when active
+        // Hide hamburger
         document.querySelector('.hamburger-btn').style.display = 'none';
 
+        // Force center
         displayPage.style.justifyContent = 'center';
         displayPage.style.alignItems = 'center';
 
@@ -539,7 +608,7 @@
         if(e) e.stopPropagation();
         displayPage.classList.remove('active');
         
-        // [Fixed] Show hamburger again
+        // Show hamburger
         document.querySelector('.hamburger-btn').style.display = '';
 
         if(activeInterval) clearInterval(activeInterval);
@@ -550,7 +619,6 @@
     function copyShareUrl(mode) {
         const params = new URLSearchParams();
         params.set('mode', mode);
-        // ... (Setting params logic kept same as previous correct version)
         if(mode === 'banner') {
             params.set('t', document.getElementById('userInput').value);
             params.set('c', document.getElementById('bannerColor').value);
@@ -580,7 +648,7 @@
             params.set('vp', document.getElementById('stopVPos').value);
         }
         const shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
-        navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied! Open on any device to see this setup.'));
+        navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied!'));
     }
 
     window.onload = () => {
