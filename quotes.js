@@ -236,6 +236,128 @@ const quotesData = [
     { en: "Stay strong.", ko: "강해져라." },
     { en: "Dream on.", ko: "계속 꿈꾸라." },
     { en: "Be a warrior.", ko: "전사가 되어라." },
-    { en: "Shine bright.", ko: "밝게 빛나라." }
-];
+    { en: "Shine bright.", ko: "밝게 빛나라." },
+
+// --- Batch 4: 301 ~ 400 ---
+
+    // 변화 & 혁신 (Change & Innovation)
+    { en: "Intelligence is the ability to adapt to change.", ko: "지능은 변화에 적응하는 능력이다." },
+    { en: "If you do what you've always done, you'll get what you've always gotten.", ko: "항상 하던 대로 하면, 항상 얻던 것만 얻게 될 것이다." },
+    { en: "Progress is impossible without change.", ko: "변화 없이는 진보도 없다." },
+    { en: "Don't fear failure. Fear being in the exact same place next year as you are today.", ko: "실패를 두려워하지 마라. 내년에도 오늘과 똑같은 자리에 있는 것을 두려워하라." },
+    { en: "Change is hard at first, messy in the middle and gorgeous at the end.", ko: "변화는 처음엔 힘들고, 중간엔 어수선하지만, 끝에는 아름답다." },
+    { en: "The measure of intelligence is the ability to change.", ko: "지능의 척도는 변화하는 능력이다." },
+    { en: "Those who cannot change their minds cannot change anything.", ko: "생각을 바꾸지 못하는 사람은 아무것도 바꿀 수 없다." },
+    { en: "Without deviation from the norm, progress is not possible.", ko: "규범에서의 일탈 없이는 진보가 불가능하다." },
+    { en: "Great things never came from comfort zones.", ko: "위대한 일은 결코 안전지대에서 나오지 않는다." },
+    { en: "Innovation separates the leader from the follower.", ko: "혁신은 리더와 추종자를 가른다." },
+
+    // 인간관계 & 소통 (Communication)
+    { en: "The art of conversation is the art of hearing as well as of being heard.", ko: "대화의 기술은 말하는 것만큼이나 듣는 기술이다." },
+    { en: "Listen with curiosity. Speak with honesty. Act with integrity.", ko: "호기심을 가지고 듣고, 정직하게 말하며, 진실되게 행동하라." },
+    { en: "Words have the power to both destroy and heal.", ko: "말은 파괴하는 힘과 치유하는 힘을 동시에 가지고 있다." },
+    { en: "Kind words can be short and easy to speak, but their echoes are truly endless.", ko: "친절한 말은 짧고 하기 쉽지만, 그 울림은 실로 영원하다." },
+    { en: "Honesty is the first chapter in the book of wisdom.", ko: "정직은 지혜의 책의 첫 장이다." },
+    { en: "Communication works for those who work at it.", ko: "소통은 노력하는 자에게만 통한다." },
+    { en: "Most people do not listen with the intent to understand; they listen with the intent to reply.", ko: "대부분의 사람은 이해하려고 듣는 것이 아니라 대답하려고 듣는다." },
+    { en: "Your words are my food, your breath my wine. You are everything to me.", ko: "당신의 말은 나의 양식이고, 당신의 숨결은 나의 와인입니다. 당신은 나의 모든 것입니다." },
+    { en: "Be a voice, not an echo.", ko: "메아리가 아닌 목소리가 되어라." },
+    { en: "Speak only if it improves upon the silence.", ko: "침묵보다 나은 말이 아니라면 침묵하라." },
+
+    // 꿈 & 야망 (Dreams & Ambition)
+    { en: "A dream you dream alone is only a dream. A dream you dream together is reality.", ko: "혼자 꾸는 꿈은 꿈일 뿐이지만, 함께 꾸는 꿈은 현실이 된다." },
+    { en: "Don't let small minds convince you that your dreams are too big.", ko: "소인배들이 당신의 꿈이 너무 크다고 말하게 두지 마라." },
+    { en: "Ambition is the path to success. Persistence is the vehicle you arrive in.", ko: "야망은 성공으로 가는 길이고, 끈기는 그 길을 달리는 자동차다." },
+    { en: "Shoot for the moon. Even if you miss, you'll land among the stars.", ko: "달을 향해 쏴라. 빗나가더라도 별들 사이에 착륙할 것이다." },
+    { en: "Hold fast to dreams, for if dreams die, life is a broken-winged bird that cannot fly.", ko: "꿈을 꼭 붙드십시오. 꿈이 죽으면 인생은 날지 못하는 날개 부러진 새와 같습니다." },
+    { en: "Dream as if you'll live forever. Live as if you'll die today.", ko: "영원히 살 것처럼 꿈꾸고, 오늘 죽을 것처럼 살아라." },
+    { en: "Never give up on a dream just because of the time it will take to accomplish it.", ko: "이루는 데 시간이 걸린다는 이유로 꿈을 포기하지 마라." },
+    { en: "The distance between your dreams and reality is called action.", ko: "꿈과 현실 사이의 거리를 행동이라고 부른다." },
+    { en: "Don't wait. The time will never be just right.", ko: "기다리지 마라. 완벽한 때는 결코 오지 않는다." },
+    { en: "Focus on where you want to go, not on what you fear.", ko: "두려워하는 것이 아니라 가고 싶은 곳에 집중하라." },
+
+    // 감사 & 축복 (Gratitude)
+    { en: "Gratitude turns what we have into enough.", ko: "감사는 우리가 가진 것을 충분하게 만든다." },
+    { en: "Count your blessings, not your problems.", ko: "문제를 세지 말고 축복을 세어라." },
+    { en: "There is always something to be thankful for.", ko: "항상 감사할 일은 있다." },
+    { en: "Gratitude is the memory of the heart.", ko: "감사는 마음의 기억이다." },
+    { en: "Start each day with a grateful heart.", ko: "매일 감사하는 마음으로 하루를 시작하라." },
+    { en: "It is not happy people who are thankful. It is thankful people who are happy.", ko: "행복한 사람이 감사하는 것이 아니라, 감사하는 사람이 행복한 것이다." },
+    { en: "Enjoy the little things, for one day you may look back and realize they were the big things.", ko: "작은 것들을 즐겨라. 언젠가 뒤돌아보면 그것들이 큰 것이었음을 깨닫게 될 것이다." },
+    { en: "Gratitude unlocks the fullness of life.", ko: "감사는 삶의 풍요로움을 여는 열쇠다." },
+    { en: "Thank you is the best prayer that anyone could say.", ko: "'감사합니다'는 누구든 할 수 있는 최고의 기도다." },
+    { en: "Wear gratitude like a cloak, and it will feed every corner of your life.", ko: "감사를 망토처럼 입어라. 그러면 그것이 당신 삶의 구석구석을 채워줄 것이다." },
+
+    // 돈 & 부 (Money & Wealth)
+    { en: "Wealth is the ability to fully experience life.", ko: "부는 인생을 완전히 경험할 수 있는 능력이다." },
+    { en: "Formal education will make you a living; self-education will make you a fortune.", ko: "정규 교육은 생계를 꾸리게 해주지만, 독학은 부를 가져다준다." },
+    { en: "It's not how much money you make, but how much money you keep.", ko: "얼마나 버느냐가 아니라 얼마나 지키느냐가 중요하다." },
+    { en: "The more you learn, the more you earn.", ko: "더 많이 배울수록 더 많이 번다." },
+    { en: "Money is a terrible master but an excellent servant.", ko: "돈은 끔찍한 주인이지만 훌륭한 하인이다." },
+    { en: "Beware of little expenses. A small leak will sink a great ship.", ko: "작은 지출을 조심하라. 작은 구멍이 거대한 배를 가라앉힌다." },
+    { en: "The lack of money is the root of all evil.", ko: "돈의 결핍이 모든 악의 근원이다." },
+    { en: "Investing in yourself is the best investment you will ever make.", ko: "자신에게 투자하는 것이 당신이 할 수 있는 최고의 투자다." },
+    { en: "Opportunity is missed by most people because it is dressed in overalls and looks like work.", ko: "기회는 작업복을 입고 일처럼 보이기 때문에 대부분의 사람들이 놓친다." },
+    { en: "Never spend your money before you have it.", ko: "돈을 손에 넣기 전에는 결코 쓰지 마라." },
+
+    // 예술 & 음악 (Art & Music)
+    { en: "Music is the shorthand of emotion.", ko: "음악은 감정의 속기법이다." },
+    { en: "Art washes away from the soul the dust of everyday life.", ko: "예술은 영혼에 쌓인 일상의 먼지를 씻어준다." },
+    { en: "Life beats down and crushes the soul and art reminds you that you have one.", ko: "삶이 영혼을 짓밟고 으깨버릴 때, 예술은 당신에게 영혼이 있다는 것을 상기시켜준다." },
+    { en: "Without music, life would be a mistake.", ko: "음악이 없다면 인생은 실수일 것이다." },
+    { en: "Every artist dips his brush in his own soul.", ko: "모든 예술가는 자신의 영혼에 붓을 담근다." },
+    { en: "Painting is poetry that is seen rather than felt.", ko: "그림은 느껴지기보다 보여지는 시다." },
+    { en: "Great art picks up where nature ends.", ko: "위대한 예술은 자연이 끝나는 곳에서 시작된다." },
+    { en: "Music acts like a magic key, to which the most tightly closed heart opens.", ko: "음악은 가장 단단히 닫힌 마음도 여는 마법의 열쇠와 같다." },
+    { en: "Creativity is contagious, pass it on.", ko: "창의성은 전염된다. 전파하라." },
+    { en: "A picture is worth a thousand words.", ko: "그림 한 장은 천 마디 말의 가치가 있다." },
+
+    // 여행 & 모험 (Travel & Adventure)
+    { en: "To travel is to live.", ko: "여행하는 것은 사는 것이다." },
+    { en: "The world is a book and those who do not travel read only one page.", ko: "세상은 한 권의 책이며, 여행하지 않는 사람은 그 책의 한 페이지만 읽는 셈이다." },
+    { en: "Adventure is worthwhile.", ko: "모험은 그만한 가치가 있다." },
+    { en: "Travel makes one modest. You see what a tiny place you occupy in the world.", ko: "여행은 사람을 겸손하게 만든다. 세상에서 내가 얼마나 작은 존재인지 알게 된다." },
+    { en: "Jobs fill your pocket, but adventures fill your soul.", ko: "직업은 주머니를 채우지만, 모험은 영혼을 채운다." },
+    { en: "Not all those who wander are lost.", ko: "방황하는 모든 이가 길을 잃은 것은 아니다." },
+    { en: "Life is either a daring adventure or nothing.", ko: "인생은 과감한 모험이거나 아니면 아무것도 아니다." },
+    { en: "Take only memories, leave only footprints.", ko: "기억만을 가져가고, 발자국만을 남겨라." },
+    { en: "Travel is the only thing you buy that makes you richer.", ko: "여행은 돈을 쓰고도 당신을 더 부유하게 만드는 유일한 것이다." },
+    { en: "Don't listen to what they say. Go see.", ko: "남의 말을 듣지 말고, 가서 직접 보라." },
+
+    // 단순함 & 미니멀리즘 (Simplicity)
+    { en: "Simplicity is the keynote of all true elegance.", ko: "단순함은 모든 진정한 우아함의 기조이다." },
+    { en: "Less is more.", ko: "적은 것이 많은 것이다." },
+    { en: "Make it simple, but significant.", ko: "단순하게, 하지만 의미 있게 만들어라." },
+    { en: "The ability to simplify means to eliminate the unnecessary so that the necessary may speak.", ko: "단순화하는 능력은 필요한 것이 말할 수 있도록 불필요한 것을 제거하는 것이다." },
+    { en: "Simplicity is the ultimate sophistication.", ko: "단순함은 궁극의 정교함이다." },
+    { en: "Be content with what you have.", ko: "가진 것에 만족하라." },
+    { en: "Nature is pleased with simplicity.", ko: "자연은 단순함을 좋아한다." },
+    { en: "Live simply so others may simply live.", ko: "검소하게 살아라. 다른 이들도 생존할 수 있도록." },
+    { en: "Complexity is your enemy. Any fool can make something complicated.", ko: "복잡함은 당신의 적이다. 바보는 누구나 복잡하게 만들 수 있다." },
+    { en: "Truth is ever to be found in simplicity.", ko: "진리는 언제나 단순함 속에서 발견된다." },
+
+    // 건강 & 웰빙 (Health)
+    { en: "Health is not valued till sickness comes.", ko: "병이 들기 전에는 건강의 가치를 모른다." },
+    { en: "Take care of your body. It's the only place you have to live.", ko: "몸을 돌보라. 당신이 살 수 있는 유일한 곳이다." },
+    { en: "A healthy outside starts from the inside.", ko: "건강한 외면은 내면에서 시작된다." },
+    { en: "To keep the body in good health is a duty.", ko: "몸을 건강하게 유지하는 것은 의무다." },
+    { en: "The greatest wealth is health.", ko: "가장 큰 부는 건강이다." },
+    { en: "Let food be thy medicine and medicine be thy food.", ko: "음식이 약이 되게 하고 약이 음식이 되게 하라." },
+    { en: "Movement is a medicine for creating change in a person's physical, emotional, and mental states.", ko: "움직임은 사람의 신체적, 정서적, 정신적 상태를 변화시키는 약이다." },
+    { en: "Sleep is the best meditation.", ko: "잠은 최고의 명상이다." },
+    { en: "Your health is an investment, not an expense.", ko: "당신의 건강은 비용이 아니라 투자다." },
+    { en: "He who has health, has hope; and he who has hope, has everything.", ko: "건강한 자는 희망이 있고, 희망이 있는 자는 모든 것을 가진 것이다." },
+
+    // 마지막 긍정의 한마디 (Final Boost)
+    { en: "You are doing great.", ko: "당신은 잘하고 있다." },
+    { en: "Keep going, keep growing.", ko: "계속 가라, 계속 성장하라." },
+    { en: "Believe in your infinite potential.", ko: "당신의 무한한 잠재력을 믿어라." },
+    { en: "Today is a perfect day to start.", ko: "오늘은 시작하기에 완벽한 날이다." },
+    { en: "You are stronger than you think.", ko: "당신은 생각보다 강하다." },
+    { en: "Make today amazing.", ko: "오늘을 놀라운 날로 만들어라." },
+    { en: "Your only limit is your mind.", ko: "유일한 한계는 당신의 마음뿐이다." },
+    { en: "Be the reason someone smiles today.", ko: "오늘 누군가가 웃는 이유가 되어라." },
+    { en: "The best preparation for tomorrow is doing your best today.", ko: "내일을 위한 최선의 준비는 오늘 최선을 다하는 것이다." },
+    { en: "You are capable of amazing things.", ko: "당신은 놀라운 일을 해낼 수 있다." }
+]; // End of quotesData
 
