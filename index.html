@@ -6,16 +6,7 @@
     <title>Pro LED Banner - Multi Tool</title>
     <style>
         :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; --track: #e1e4e8; }
-        
-        /* [Global Reset] */
-        body, html { 
-            margin: 0; padding: 0; 
-            width: 100%; height: 100%; 
-            font-family: 'Inter', -apple-system, sans-serif; 
-            background: var(--bg); 
-            overflow-x: hidden; /* 가로 스크롤 방지 */
-            scroll-behavior: smooth; 
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); overflow-x: hidden; scroll-behavior: smooth; }
 
         /* [Header] */
         #header-area { text-align: center; position: sticky; top: 0; background: var(--bg); z-index: 150; padding: 20px 0 10px; }
@@ -47,7 +38,6 @@
         .timer-inputs input { text-align: center; }
 
         .presets-label { font-weight: bold; color: var(--dark); margin-bottom: 10px; display: block; font-size: 0.9rem; }
-        /* 12 Templates Grid */
         .preset-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
         .preset-btn { border: 2px solid #eee; padding: 8px 2px; border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.7rem; font-weight: bold; background: #fff; transition: transform 0.2s; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .preset-btn:hover { transform: translateY(-2px); border-color: var(--primary); }
@@ -67,6 +57,11 @@
         .btn-main:hover { background: #c23616; transform: translateY(-2px); }
         .btn-share { background: #44bd32; margin-top: 10px; }
 
+        /* [Quote Display Style] */
+        .quote-display { background: #fdfdfd; border: 2px dashed #eee; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+        .quote-en { font-size: 1.2rem; font-weight: bold; color: var(--dark); margin-bottom: 10px; line-height: 1.4; }
+        .quote-ko { font-size: 1rem; color: #666; line-height: 1.4; }
+
         /* [Display Page] */
         #display-page { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 2000; overflow: hidden; align-items: center; justify-content: center; }
         #display-page.active { display: flex; }
@@ -85,25 +80,15 @@
         
         @media (max-width: 850px) {
             .app-wrapper { display: block; padding: 15px; }
-            
-            /* [Fixed] Sidebar White Space Issue */
-            .sidebar { 
-                position: fixed; top: 0 !important; right: -280px; width: 260px; height: 100vh; 
-                z-index: 7000; box-shadow: -2px 0 10px rgba(0,0,0,0.1); 
-                visibility: hidden; /* Hide completely when closed */
-                transition: right 0.3s, visibility 0.3s; 
-            }
-            .sidebar.active { 
-                right: 0; 
-                visibility: visible; /* Show when active */
-            } 
-            
+            .sidebar { position: fixed; top: 0 !important; right: -280px; width: 260px; height: 100vh; z-index: 7000; box-shadow: -2px 0 10px rgba(0,0,0,0.1); visibility: hidden; transition: right 0.3s, visibility 0.3s; }
+            .sidebar.active { right: 0; visibility: visible; } 
             .menu-overlay.active { display: block; }
             .hamburger-btn, .close-btn { display: block; }
             .preset-grid { grid-template-columns: repeat(3, 1fr); }
         }
         @keyframes scrollAnim { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
     </style>
+    <script src="quotes.js"></script>
 </head>
 <body>
 
@@ -128,8 +113,7 @@
             </div>
 
             <label class="presets-label">12 High-Contrast Templates</label>
-            <div class="preset-grid" id="preset-banner">
-                </div>
+            <div class="preset-grid" id="preset-banner"></div>
 
             <div class="setting-grid">
                 <div><label>Text</label><input type="color" id="bannerColor" value="#ffffff"></div>
@@ -152,11 +136,8 @@
 
         <div class="config-card" id="section-clock">
             <div class="card-header"><span class="card-icon">🕒</span><h3 class="card-title">2. Digital Clock</h3></div>
-            
             <label class="presets-label">12 High-Contrast Templates</label>
-            <div class="preset-grid" id="preset-clock">
-                 </div>
-
+            <div class="preset-grid" id="preset-clock"></div>
             <div class="setting-grid">
                 <div><label>Text</label><input type="color" id="clockColor" value="#00ff00"></div>
                 <div><label>Bg</label><input type="color" id="clockBg" value="#000000"></div>
@@ -185,11 +166,8 @@
                     <input type="number" id="timerS" placeholder="00" min="0" max="59">
                 </div>
             </div>
-
             <label class="presets-label">12 High-Contrast Templates</label>
-            <div class="preset-grid" id="preset-timer">
-                 </div>
-
+            <div class="preset-grid" id="preset-timer"></div>
             <div class="setting-grid">
                 <div><label>Text</label><input type="color" id="timerColor" value="#ff0000"></div>
                 <div><label>Bg</label><input type="color" id="timerBg" value="#000000"></div>
@@ -207,11 +185,8 @@
 
         <div class="config-card" id="section-stopwatch">
             <div class="card-header"><span class="card-icon">⏱️</span><h3 class="card-title">4. Stopwatch</h3></div>
-            
             <label class="presets-label">12 High-Contrast Templates</label>
-            <div class="preset-grid" id="preset-stop">
-                 </div>
-
+            <div class="preset-grid" id="preset-stop"></div>
             <div class="setting-grid">
                 <div><label>Text</label><input type="color" id="stopColor" value="#ffffff"></div>
                 <div><label>Bg</label><input type="color" id="stopBg" value="#000000"></div>
@@ -227,6 +202,20 @@
             <button class="btn-main btn-share" onclick="copyShareUrl('stop')">Share Link</button>
         </div>
 
+        <div class="config-card" id="section-quote">
+            <div class="card-header"><span class="card-icon">📜</span><h3 class="card-title">5. Daily Quote</h3></div>
+            
+            <div class="quote-display">
+                <div class="quote-en" id="q-en">Loading...</div>
+                <div class="quote-ko" id="q-ko"></div>
+            </div>
+
+            <div class="setting-grid">
+                <button class="btn-main" style="background:#666; font-size:0.9rem;" onclick="loadRandomQuote()">🔄 Random Quote</button>
+                <button class="btn-main" onclick="setBannerToQuote()">Show on Banner</button>
+            </div>
+        </div>
+
     </main>
 
     <nav class="sidebar" id="sidebarMenu">
@@ -237,6 +226,7 @@
             <a href="#section-clock" class="nav-link">🕒 2. Clock</a>
             <a href="#section-timer" class="nav-link">⏳ 3. Timer</a>
             <a href="#section-stopwatch" class="nav-link">⏱️ 4. Stopwatch</a>
+            <a href="#section-quote" class="nav-link">📜 5. Quote</a>
             <div style="height:1px; background:#eee; margin:5px 0;"></div>
             <a href="#" class="nav-link" onclick="window.scrollTo(0,0); toggleMenu(); return false;">⬆️ Top</a>
         </div>
@@ -264,7 +254,7 @@
     let timerEndTime = 0;
     let stopwatchStartTime = 0;
 
-    // --- 12 High-Contrast Templates Definition ---
+    // --- 12 High-Contrast Templates ---
     const templates = [
         { name: "Neon", t: "#00FF00", b: "#000000" },
         { name: "Red", t: "#FFFFFF", b: "#E84118" },
@@ -287,7 +277,6 @@
         }
     }
 
-    // Populate Templates Dynamically
     function initTemplates() {
         ['banner', 'clock', 'timer', 'stop'].forEach(mode => {
             const container = document.getElementById('preset-' + mode);
@@ -305,10 +294,31 @@
         document.getElementById(type + 'Bg').value = bg;
     }
 
-    // --- SAVE & LOAD SETTINGS (Local Storage) ---
+    // --- QUOTE LOGIC ---
+    // If quotes.js fails to load, use this backup
+    let quotesList = (typeof quotesData !== 'undefined') ? quotesData : [
+        {en: "Life is good.", ko: "삶은 좋은 것이다."},
+        {en: "Stay hungry, stay foolish.", ko: "항상 갈망하라, 바보처럼 우직하게."},
+        {en: "This too shall pass.", ko: "이 또한 지나가리라."}
+    ];
+
+    function loadRandomQuote() {
+        const r = Math.floor(Math.random() * quotesList.length);
+        const q = quotesList[r];
+        document.getElementById('q-en').innerText = q.en;
+        document.getElementById('q-ko').innerText = q.ko;
+    }
+
+    function setBannerToQuote() {
+        const en = document.getElementById('q-en').innerText;
+        document.getElementById('userInput').value = en;
+        // Scroll to banner section
+        document.getElementById('section-banner').scrollIntoView({behavior: 'smooth'});
+    }
+
+    // --- SAVE & LOAD SETTINGS ---
     function saveAllSettings() {
         const settings = {
-            // Banner (using correct IDs)
             b_text: document.getElementById('userInput').value,
             b_color: document.getElementById('bannerColor').value,
             b_bg: document.getElementById('bannerBg').value,
@@ -316,13 +326,11 @@
             b_speed: document.getElementById('speedSlider').value,
             b_vpos: document.getElementById('vPosSlider').value,
             b_anim: document.getElementById('scrollCheck').checked,
-            // Clock
             c_color: document.getElementById('clockColor').value,
             c_bg: document.getElementById('clockBg').value,
             c_size: document.getElementById('clockSize').value,
             c_vpos: document.getElementById('clockVPos').value,
             c_24: document.getElementById('clock24').checked,
-            // Timer
             t_color: document.getElementById('timerColor').value,
             t_bg: document.getElementById('timerBg').value,
             t_size: document.getElementById('timerSize').value,
@@ -330,7 +338,6 @@
             t_h: document.getElementById('timerH').value,
             t_m: document.getElementById('timerM').value,
             t_s: document.getElementById('timerS').value,
-            // Stopwatch
             s_color: document.getElementById('stopColor').value,
             s_bg: document.getElementById('stopBg').value,
             s_size: document.getElementById('stopSize').value,
@@ -379,7 +386,7 @@
         currentMode = mode;
         displayPage.classList.add('active');
         
-        // [Fixed] Hide hamburger menu when active
+        // Hide hamburger menu
         document.querySelector('.hamburger-btn').style.display = 'none';
 
         displayPage.style.justifyContent = 'center';
@@ -510,7 +517,7 @@
         if(e) e.stopPropagation();
         displayPage.classList.remove('active');
         
-        // [Fixed] Show hamburger again
+        // Show hamburger again
         document.querySelector('.hamburger-btn').style.display = '';
 
         if(activeInterval) clearInterval(activeInterval);
@@ -555,6 +562,7 @@
 
     window.onload = () => {
         initTemplates();
+        loadRandomQuote();
 
         const urlParams = new URLSearchParams(window.location.search);
         if (!urlParams.has('mode') && !urlParams.has('t')) {
