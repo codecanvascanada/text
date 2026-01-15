@@ -6,7 +6,7 @@
     
     <title>Glowy - LED Banner & Screen Tool</title>
     <meta name="description" content="Glowy is a free online LED Banner, Digital Clock, Countdown Timer, and Stopwatch. Perfect for concerts, airport pickups, and productivity.">
-    <meta name="keywords" content="Glowy, LED Banner, LED Scroller, Digital Clock, Online Timer, Stopwatch, Concert Tool, K-Pop Cheering">
+    <meta name="keywords" content="Glowy, LED Banner, LED Scroller, Digital Clock, Online Timer, Stopwatch, Concert Tool, K-Pop Cheering, Pomodoro Timer">
     <meta name="author" content="Glowy Service">
     
     <meta property="og:title" content="Glowy - All-in-One Screen Tool">
@@ -46,6 +46,9 @@
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); font-size: 0.9rem; }
         input[type="text"], input[type="number"] { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 1.1rem; font-family: monospace; }
+        /* Disabled Input Style */
+        input:disabled { background-color: #f0f0f0; color: #999; cursor: not-allowed; }
+        
         .timer-inputs { display: flex; gap: 10px; }
         .timer-inputs div { flex: 1; }
         .timer-inputs input { text-align: center; }
@@ -80,16 +83,13 @@
         .scenario-item img { width: 100%; border-radius: 10px; aspect-ratio: 16/9; object-fit: cover; margin-bottom: 8px; border: 1px solid #eee; background: #eee; }
         .scenario-item span { font-size: 0.85rem; font-weight: bold; color: #555; display: block; line-height: 1.2; }
 
-        /* [Quote Display Style] */
         .quote-display { background: #fdfdfd; border: 2px dashed #eee; padding: 30px 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
         .quote-en { font-size: 1.3rem; font-weight: bold; color: var(--dark); margin-bottom: 0; line-height: 1.5; }
 
-        /* [Footer] */
         .site-footer { text-align: center; padding: 40px 0 20px; color: #999; font-size: 0.85rem; border-top: 1px solid #eee; margin-top: 40px; }
         .site-footer a { color: #999; text-decoration: none; margin: 0 10px; }
         .site-footer a:hover { color: var(--primary); text-decoration: underline; }
 
-        /* [Display Page - Full Screen] */
         #display-page { 
             display: none; 
             position: fixed; top: 0; left: 0; 
@@ -109,7 +109,6 @@
         #display-controls.visible { opacity: 1; visibility: visible; }
         .overlay-btn { padding: 12px 25px; background: rgba(255, 255, 255, 0.2); color: white; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(5px); font-weight: bold; }
 
-        /* [Click To Start Overlay for Sharing] */
         #start-overlay {
             display: none;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -141,7 +140,6 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 65, 24, 0); }
         }
 
-        /* Mobile Hamburger Button (Bottom Right) */
         .hamburger-btn { 
             display: none; 
             position: fixed; bottom: 30px; right: 30px; 
@@ -268,6 +266,11 @@
         <div class="config-card" id="section-timer">
             <div class="card-header"><span class="card-icon">⏳</span><h3 class="card-title">3. Timer</h3></div>
             <p class="feature-desc">Count down for workouts, cooking, exams, or presentations.</p>
+            
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size: 0.95rem; margin-bottom: 15px; font-weight:bold; color:#e84118;">
+                <input type="checkbox" id="tomatoCheck" style="width:18px; height:18px;"> 🍅 Tomato Timer (25m Focus + 5m Rest Loop)
+            </label>
+
             <div class="input-group">
                 <label>Set Duration (HH : MM : SS)</label>
                 <div class="timer-inputs">
@@ -429,6 +432,19 @@
         document.getElementById('section-banner').scrollIntoView({behavior: 'smooth'});
     }
 
+    // --- Tomato Checkbox Logic ---
+    document.getElementById('tomatoCheck').addEventListener('change', (e) => {
+        const inputs = document.querySelectorAll('.timer-inputs input');
+        if(e.target.checked) {
+            document.getElementById('timerH').value = 0;
+            document.getElementById('timerM').value = 25;
+            document.getElementById('timerS').value = 0;
+            inputs.forEach(i => i.disabled = true);
+        } else {
+            inputs.forEach(i => i.disabled = false);
+        }
+    });
+
     function saveAllSettings() {
         const settings = {
             b_text: document.getElementById('userInput').value,
@@ -450,6 +466,7 @@
             t_h: document.getElementById('timerH').value,
             t_m: document.getElementById('timerM').value,
             t_s: document.getElementById('timerS').value,
+            t_tomato: document.getElementById('tomatoCheck').checked, // Save Tomato State
             s_color: document.getElementById('stopColor').value,
             s_bg: document.getElementById('stopBg').value,
             s_size: document.getElementById('stopSize').value,
@@ -481,6 +498,14 @@
         if(s.t_h) document.getElementById('timerH').value = s.t_h;
         if(s.t_m) document.getElementById('timerM').value = s.t_m;
         if(s.t_s) document.getElementById('timerS').value = s.t_s;
+        
+        // Restore Tomato Checkbox
+        if(s.t_tomato !== undefined) {
+            document.getElementById('tomatoCheck').checked = s.t_tomato;
+            // Trigger change event to set disabled state
+            document.getElementById('tomatoCheck').dispatchEvent(new Event('change'));
+        }
+
         if(s.s_color) document.getElementById('stopColor').value = s.s_color;
         if(s.s_bg) document.getElementById('stopBg').value = s.s_bg;
         if(s.s_size) document.getElementById('stopSize').value = s.s_size;
@@ -500,7 +525,6 @@
         staticTextEl.style.display = 'none';
         if(activeInterval) clearInterval(activeInterval);
         
-        // Brief Play/Pause to unlock audio on mobile
         const audio = document.getElementById('alarm-sound');
         if(audio) { audio.play().then(() => audio.pause()).catch(() => {}); }
 
@@ -556,6 +580,15 @@
 
     function setupTimer() {
         staticTextEl.style.display = 'block';
+        
+        // Check if Tomato Mode
+        const isTomato = document.getElementById('tomatoCheck').checked;
+        if (isTomato) {
+            runTomatoCycle('focus'); // Start Tomato Loop
+            return;
+        }
+
+        // Normal Timer Logic
         applyStaticStyle('timer');
         const h = parseInt(document.getElementById('timerH').value) || 0;
         const m = parseInt(document.getElementById('timerM').value) || 0;
@@ -569,16 +602,68 @@
             if (left <= 0) {
                 staticTextEl.innerText = "00:00:00"; 
                 clearInterval(activeInterval);
-                
-                // Play Sound
                 const audio = document.getElementById('alarm-sound');
                 if(audio) { audio.currentTime = 0; audio.play().catch(e=>console.log(e)); }
-
                 let flash = false; const bg = document.getElementById('timerBg').value;
                 activeInterval = setInterval(() => { displayPage.style.backgroundColor = flash ? bg : 'red'; flash = !flash; }, 500);
                 return;
             }
             const hh = Math.floor(left / 3600000); const mm = Math.floor((left % 3600000) / 60000); const ss = Math.floor((left % 60000) / 1000);
+            staticTextEl.innerText = String(hh).padStart(2,'0') + ":" + String(mm).padStart(2,'0') + ":" + String(ss).padStart(2,'0');
+        }
+        tick();
+        activeInterval = setInterval(tick, 1000);
+    }
+
+    // --- Tomato Loop Logic ---
+    function runTomatoCycle(state) {
+        let duration = 0;
+        let color = '';
+        let bg = '';
+
+        if (state === 'focus') {
+            duration = 25 * 60; // 25 mins
+            color = '#FFFFFF';
+            bg = '#D63031'; // Red
+        } else {
+            duration = 5 * 60; // 5 mins
+            color = '#000000';
+            bg = '#55E6C1'; // Green
+        }
+
+        // Apply visual
+        displayPage.style.backgroundColor = bg;
+        staticTextEl.style.color = color;
+        // Use current size settings
+        const size = document.getElementById('timerSize').value;
+        const vPos = document.getElementById('timerVPos').value;
+        staticTextEl.style.fontSize = size + "vw";
+        staticTextEl.style.marginTop = `-${vPos}vh`;
+
+        timerEndTime = Date.now() + (duration * 1000);
+
+        function tick() {
+            const now = Date.now();
+            const left = timerEndTime - now;
+            
+            if (left <= 0) {
+                clearInterval(activeInterval);
+                
+                // Play Alarm
+                const audio = document.getElementById('alarm-sound');
+                if(audio) { audio.currentTime = 0; audio.play().catch(e=>console.log(e)); }
+
+                // Switch State and Restart
+                const nextState = (state === 'focus') ? 'break' : 'focus';
+                setTimeout(() => {
+                    runTomatoCycle(nextState);
+                }, 2000); // Small delay to hear alarm before switch
+                return;
+            }
+
+            const hh = Math.floor(left / 3600000); 
+            const mm = Math.floor((left % 3600000) / 60000); 
+            const ss = Math.floor((left % 60000) / 1000);
             staticTextEl.innerText = String(hh).padStart(2,'0') + ":" + String(mm).padStart(2,'0') + ":" + String(ss).padStart(2,'0');
         }
         tick();
@@ -632,7 +717,6 @@
         displayPage.classList.remove('active');
         document.querySelector('.hamburger-btn').style.display = ''; 
         
-        // Stop Sound
         const audio = document.getElementById('alarm-sound');
         if(audio) { audio.pause(); audio.currentTime = 0; }
 
@@ -671,6 +755,7 @@
             params.set('h', document.getElementById('timerH').value);
             params.set('m', document.getElementById('timerM').value);
             params.set('ss', document.getElementById('timerS').value);
+            params.set('t_tomato', document.getElementById('tomatoCheck').checked); // Save Tomato State
         } else if(mode === 'stop') {
             params.set('c', document.getElementById('stopColor').value);
             params.set('b', document.getElementById('stopBg').value);
@@ -714,6 +799,10 @@
                 if(urlParams.has('h')) document.getElementById('timerH').value = urlParams.get('h');
                 if(urlParams.has('m')) document.getElementById('timerM').value = urlParams.get('m');
                 if(urlParams.has('ss')) document.getElementById('timerS').value = urlParams.get('ss');
+                if(urlParams.has('t_tomato')) { // Restore Tomato Checkbox from URL
+                    document.getElementById('tomatoCheck').checked = urlParams.get('t_tomato') === 'true';
+                    document.getElementById('tomatoCheck').dispatchEvent(new Event('change'));
+                }
             } else if(mode === 'stop') {
                 if(urlParams.has('c')) document.getElementById('stopColor').value = urlParams.get('c');
                 if(urlParams.has('b')) document.getElementById('stopBg').value = urlParams.get('b');
