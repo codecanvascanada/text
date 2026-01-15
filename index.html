@@ -18,15 +18,7 @@
     <style>
         :root { --primary: #e84118; --bg: #f5f6fa; --dark: #2f3640; --track: #e1e4e8; }
         
-        /* [Global Reset] */
-        body, html { 
-            margin: 0; padding: 0; 
-            width: 100%; height: 100%; 
-            font-family: 'Inter', -apple-system, sans-serif; 
-            background: var(--bg); 
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); overflow-x: hidden; scroll-behavior: smooth; }
 
         /* [Header] */
         #header-area { text-align: center; position: sticky; top: 0; background: var(--bg); z-index: 150; padding: 20px 0 10px; }
@@ -37,18 +29,7 @@
         .app-wrapper { display: flex; align-items: flex-start; justify-content: center; gap: 30px; max-width: 1000px; margin: 0 auto; padding: 20px 20px 100px; box-sizing: border-box; min-height: 100vh; }
         .content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
 
-        /* [Intro & Scenarios] */
-        .intro-text { background: #fff; padding: 20px; border-radius: 15px; border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .intro-text h2 { margin: 0 0 10px; font-size: 1.1rem; color: var(--dark); }
-        .intro-text p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.5; }
-
-        .scenarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .scenario-item { background: white; padding: 15px 10px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s; cursor: pointer; }
-        .scenario-item:hover { transform: translateY(-3px); }
-        .scenario-item img { width: 100%; border-radius: 10px; aspect-ratio: 16/9; object-fit: cover; margin-bottom: 8px; border: 1px solid #eee; background: #eee; }
-        .scenario-item span { font-size: 0.85rem; font-weight: bold; color: #555; display: block; line-height: 1.2; }
-
-        /* [Right Sidebar] */
+        /* [Sidebar] */
         .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 120px; background: white; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 1000; height: fit-content; }
         .brand-title { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0; display: block; }
         .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px; color: #555; text-decoration: none; border-radius: 10px; font-weight: 600; transition: 0.2s; font-size: 0.9rem; cursor: pointer; }
@@ -89,6 +70,16 @@
         .btn-main:hover { background: #c23616; transform: translateY(-2px); }
         .btn-share { background: #44bd32; margin-top: 10px; }
 
+        .intro-text { background: #fff; padding: 20px; border-radius: 15px; border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .intro-text h2 { margin: 0 0 10px; font-size: 1.1rem; color: var(--dark); }
+        .intro-text p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.5; }
+
+        .scenarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .scenario-item { background: white; padding: 15px 10px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s; cursor: pointer; }
+        .scenario-item:hover { transform: translateY(-3px); }
+        .scenario-item img { width: 100%; border-radius: 10px; aspect-ratio: 16/9; object-fit: cover; margin-bottom: 8px; border: 1px solid #eee; background: #eee; }
+        .scenario-item span { font-size: 0.85rem; font-weight: bold; color: #555; display: block; line-height: 1.2; }
+
         /* [Quote Display Style] */
         .quote-display { background: #fdfdfd; border: 2px dashed #eee; padding: 30px 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
         .quote-en { font-size: 1.3rem; font-weight: bold; color: var(--dark); margin-bottom: 0; line-height: 1.5; }
@@ -118,12 +109,42 @@
         #display-controls.visible { opacity: 1; visibility: visible; }
         .overlay-btn { padding: 12px 25px; background: rgba(255, 255, 255, 0.2); color: white; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 0.9rem; backdrop-filter: blur(5px); font-weight: bold; }
 
-        /* Mobile Hamburger Button (Floating Action Button Style) */
+        /* [Click To Start Overlay for Sharing] */
+        #start-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 12000;
+            flex-direction: column;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        #start-overlay.active { display: flex; }
+        .start-btn-large {
+            width: 100px; height: 100px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: white;
+            box-shadow: 0 0 30px rgba(232, 65, 24, 0.6);
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+        .start-text {
+            margin-top: 20px;
+            color: white; font-size: 1.2rem; font-weight: bold;
+            text-align: center;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 65, 24, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(232, 65, 24, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 65, 24, 0); }
+        }
+
+        /* Mobile Hamburger Button (Bottom Right) */
         .hamburger-btn { 
             display: none; 
-            position: fixed; 
-            bottom: 30px; 
-            right: 30px; 
+            position: fixed; bottom: 30px; right: 30px; 
             z-index: 8000; 
             width: 60px; height: 60px; 
             background: var(--primary); 
@@ -149,10 +170,8 @@
             }
             .sidebar.active { right: 0; visibility: visible; } 
             .menu-overlay.active { display: block; }
-            
             .hamburger-btn { display: flex; } 
             .close-btn { display: block; }
-            
             .preset-grid { grid-template-columns: repeat(3, 1fr); }
             .scenarios-grid { grid-template-columns: repeat(1, 1fr); }
         }
@@ -162,8 +181,15 @@
 </head>
 <body>
 
+<audio id="alarm-sound" src="alarm.mp3" preload="auto" style="display:none;"></audio>
+
 <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
 <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+<div id="start-overlay" onclick="startSharedMode()">
+    <div class="start-btn-large">▶</div>
+    <div class="start-text">Tap to Start Full Screen</div>
+</div>
 
 <div class="app-wrapper">
     <main class="content-area">
@@ -178,19 +204,15 @@
         <div class="intro-text">
             <h2>💡 How to use & Tips</h2>
             <p>Select a feature below, set your colors, and press start. Perfect for concerts, sports events, and productivity.</p>
-            
             <div class="scenarios-grid">
                 <div class="scenario-item" onclick="document.getElementById('section-banner').scrollIntoView({behavior:'smooth'})">
-                    <img src="concert.png" alt="Concert Cheering">
-                    <span>Concert Cheering</span>
+                    <img src="concert.png" alt="Concert Cheering"><span>Concert Cheering</span>
                 </div>
                 <div class="scenario-item" onclick="document.getElementById('section-banner').scrollIntoView({behavior:'smooth'})">
-                    <img src="car.png" alt="Car Emergency">
-                    <span>Emergency Sign</span>
+                    <img src="car.png" alt="Car Emergency"><span>Emergency Sign</span>
                 </div>
                 <div class="scenario-item" onclick="document.getElementById('section-banner').scrollIntoView({behavior:'smooth'})">
-                    <img src="airport.png" alt="Airport Pickup">
-                    <span>Airport Pickup</span>
+                    <img src="airport.png" alt="Airport Pickup"><span>Airport Pickup</span>
                 </div>
             </div>
         </div>
@@ -198,10 +220,8 @@
         <div class="config-card" id="section-banner">
             <div class="card-header"><span class="card-icon">💬</span><h3 class="card-title">1. Text Banner</h3></div>
             <p class="feature-desc">Use this for cheering, messages, or airport pickups with scrolling text.</p>
-            
             <div class="input-group">
-                <label>Message</label>
-                <input type="text" id="userInput" value="CHEER UP!">
+                <label>Message</label><input type="text" id="userInput" value="CHEER UP!">
             </div>
             <label class="presets-label">12 High-Contrast Templates</label>
             <div class="preset-grid" id="preset-banner"></div>
@@ -214,8 +234,7 @@
                 <div><label>Speed</label><input type="range" id="speedSlider" min="1" max="10" value="5"></div>
             </div>
             <div class="range-wrapper">
-                <label>Vertical Position (Up)</label>
-                <input type="range" id="vPosSlider" min="0" max="30" value="0" step="1">
+                <label>Vertical Position (Up)</label><input type="range" id="vPosSlider" min="0" max="30" value="0" step="1">
             </div>
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size: 0.9rem; margin-bottom: 15px;">
                 <input type="checkbox" id="scrollCheck" checked> Enable Animation
@@ -227,7 +246,6 @@
         <div class="config-card" id="section-clock">
             <div class="card-header"><span class="card-icon">🕒</span><h3 class="card-title">2. Digital Clock</h3></div>
             <p class="feature-desc">Turn your screen into a desk clock. Good for studying or office.</p>
-
             <label class="presets-label">12 High-Contrast Templates</label>
             <div class="preset-grid" id="preset-clock"></div>
             <div class="setting-grid">
@@ -238,8 +256,7 @@
                 <label>Size</label><input type="range" id="clockSize" min="10" max="50" value="25">
             </div>
             <div class="range-wrapper">
-                <label>Vertical Position (Up)</label>
-                <input type="range" id="clockVPos" min="0" max="30" value="0" step="1">
+                <label>Vertical Position (Up)</label><input type="range" id="clockVPos" min="0" max="30" value="0" step="1">
             </div>
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size: 0.9rem; margin-bottom: 15px;">
                 <input type="checkbox" id="clock24" style="width:18px; height:18px;"> Use 24-Hour Format (13:00)
@@ -251,7 +268,6 @@
         <div class="config-card" id="section-timer">
             <div class="card-header"><span class="card-icon">⏳</span><h3 class="card-title">3. Timer</h3></div>
             <p class="feature-desc">Count down for workouts, cooking, exams, or presentations.</p>
-
             <div class="input-group">
                 <label>Set Duration (HH : MM : SS)</label>
                 <div class="timer-inputs">
@@ -270,8 +286,7 @@
                 <label>Size</label><input type="range" id="timerSize" min="10" max="50" value="25">
             </div>
             <div class="range-wrapper">
-                <label>Vertical Position (Up)</label>
-                <input type="range" id="timerVPos" min="0" max="30" value="0" step="1">
+                <label>Vertical Position (Up)</label><input type="range" id="timerVPos" min="0" max="30" value="0" step="1">
             </div>
             <button class="btn-main" onclick="startMode('timer')">Start Timer</button>
             <button class="btn-main btn-share" onclick="copyShareUrl('timer')">Share Link</button>
@@ -280,7 +295,6 @@
         <div class="config-card" id="section-stopwatch">
             <div class="card-header"><span class="card-icon">⏱️</span><h3 class="card-title">4. Stopwatch</h3></div>
             <p class="feature-desc">Measure elapsed time for laps, sports, or games.</p>
-
             <label class="presets-label">12 High-Contrast Templates</label>
             <div class="preset-grid" id="preset-stop"></div>
             <div class="setting-grid">
@@ -291,8 +305,7 @@
                 <label>Size</label><input type="range" id="stopSize" min="10" max="50" value="25">
             </div>
             <div class="range-wrapper">
-                <label>Vertical Position (Up)</label>
-                <input type="range" id="stopVPos" min="0" max="30" value="0" step="1">
+                <label>Vertical Position (Up)</label><input type="range" id="stopVPos" min="0" max="30" value="0" step="1">
             </div>
             <button class="btn-main" onclick="startMode('stopwatch')">Start Stopwatch</button>
             <button class="btn-main btn-share" onclick="copyShareUrl('stop')">Share Link</button>
@@ -301,7 +314,6 @@
         <div class="config-card" id="section-quote">
             <div class="card-header"><span class="card-icon">📜</span><h3 class="card-title">5. Daily Quote</h3></div>
             <p class="feature-desc">Get inspired with a random wise saying.</p>
-
             <div class="quote-display">
                 <div class="quote-en" id="q-en">Loading...</div>
             </div>
@@ -313,13 +325,8 @@
 
         <footer class="site-footer">
             <p>&copy; 2026 Glowy. All rights reserved.</p>
-            <p>
-                <a href="#">Contact Us</a> | 
-                <a href="#">Privacy Policy</a> | 
-                <a href="#">Terms of Service</a>
-            </p>
+            <p><a href="#">Contact Us</a> | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
         </footer>
-
     </main>
 
     <nav class="sidebar" id="sidebarMenu">
@@ -358,8 +365,8 @@
     let currentMode = null;
     let timerEndTime = 0;
     let stopwatchStartTime = 0;
+    let pendingShareMode = null;
 
-    // --- 12 High-Contrast Templates ---
     const templates = [
         { name: "Neon", t: "#00FF00", b: "#000000" },
         { name: "Red", t: "#FFFFFF", b: "#E84118" },
@@ -406,11 +413,8 @@
         document.getElementById(type + 'Bg').value = bg;
     }
 
-    // --- QUOTE LOGIC ---
     let quotesList = (typeof quotesData !== 'undefined') ? quotesData : [
-        {en: "Life is good."},
-        {en: "Stay hungry, stay foolish."},
-        {en: "This too shall pass."}
+        {en: "Life is good."}, {en: "Stay hungry."}, {en: "This too shall pass."}
     ];
 
     function loadRandomQuote() {
@@ -425,7 +429,6 @@
         document.getElementById('section-banner').scrollIntoView({behavior: 'smooth'});
     }
 
-    // --- SAVE & LOAD ---
     function saveAllSettings() {
         const settings = {
             b_text: document.getElementById('userInput').value,
@@ -459,7 +462,6 @@
         const saved = localStorage.getItem('proLedSettings');
         if (!saved) return;
         const s = JSON.parse(saved);
-
         if(s.b_text) document.getElementById('userInput').value = s.b_text;
         if(s.b_color) document.getElementById('bannerColor').value = s.b_color;
         if(s.b_bg) document.getElementById('bannerBg').value = s.b_bg;
@@ -467,13 +469,11 @@
         if(s.b_speed) document.getElementById('speedSlider').value = s.b_speed;
         if(s.b_vpos) document.getElementById('vPosSlider').value = s.b_vpos;
         if(s.b_anim !== undefined) document.getElementById('scrollCheck').checked = s.b_anim;
-        
         if(s.c_color) document.getElementById('clockColor').value = s.c_color;
         if(s.c_bg) document.getElementById('clockBg').value = s.c_bg;
         if(s.c_size) document.getElementById('clockSize').value = s.c_size;
         if(s.c_vpos) document.getElementById('clockVPos').value = s.c_vpos;
         if(s.c_24 !== undefined) document.getElementById('clock24').checked = s.c_24;
-
         if(s.t_color) document.getElementById('timerColor').value = s.t_color;
         if(s.t_bg) document.getElementById('timerBg').value = s.t_bg;
         if(s.t_size) document.getElementById('timerSize').value = s.t_size;
@@ -481,38 +481,40 @@
         if(s.t_h) document.getElementById('timerH').value = s.t_h;
         if(s.t_m) document.getElementById('timerM').value = s.t_m;
         if(s.t_s) document.getElementById('timerS').value = s.t_s;
-
         if(s.s_color) document.getElementById('stopColor').value = s.s_color;
         if(s.s_bg) document.getElementById('stopBg').value = s.s_bg;
         if(s.s_size) document.getElementById('stopSize').value = s.s_size;
         if(s.s_vpos) document.getElementById('stopVPos').value = s.s_vpos;
     }
 
-    // --- Display Logic ---
     function startMode(mode) {
         saveAllSettings(); 
-
         currentMode = mode;
         displayPage.classList.add('active');
-        
-        // Hide hamburger
-        document.querySelector('.hamburger-btn').style.display = 'none';
-
-        // Force center
+        document.querySelector('.hamburger-btn').style.display = 'none'; 
         displayPage.style.justifyContent = 'center';
         displayPage.style.alignItems = 'center';
-
         handleUserActivity();
         requestFullScreenOnly();
-
         scrollTextEl.style.display = 'none';
         staticTextEl.style.display = 'none';
         if(activeInterval) clearInterval(activeInterval);
+        
+        // Brief Play/Pause to unlock audio on mobile
+        const audio = document.getElementById('alarm-sound');
+        if(audio) { audio.play().then(() => audio.pause()).catch(() => {}); }
 
         if (mode === 'banner') setupBanner();
         else if (mode === 'clock') setupClock();
         else if (mode === 'timer') setupTimer();
         else if (mode === 'stopwatch') setupStopwatch();
+    }
+
+    function startSharedMode() {
+        document.getElementById('start-overlay').classList.remove('active');
+        if (pendingShareMode) {
+            startMode(pendingShareMode);
+        }
     }
 
     function setupBanner() {
@@ -522,16 +524,13 @@
         const bg = document.getElementById('bannerBg').value;
         const size = document.getElementById('sizeSlider').value;
         const vPos = document.getElementById('vPosSlider').value;
-        
         displayPage.style.backgroundColor = bg;
         scrollTextEl.innerText = text;
         scrollTextEl.style.color = color;
         scrollTextEl.style.fontSize = size + "vh";
         scrollTextEl.style.marginTop = `-${vPos}vh`;
-        
         scrollTextEl.style.animation = 'none';
         void scrollTextEl.offsetWidth;
-
         if(document.getElementById('scrollCheck').checked) {
             displayPage.style.justifyContent = 'flex-start'; 
             const speed = document.getElementById('speedSlider').value;
@@ -563,13 +562,18 @@
         const s = parseInt(document.getElementById('timerS').value) || 0;
         const totalSeconds = (h * 3600) + (m * 60) + s;
         if(totalSeconds <= 0) { alert("Please set a time first!"); stopDisplay(); return; }
-
         timerEndTime = Date.now() + (totalSeconds * 1000);
         function tick() {
             const now = Date.now();
             const left = timerEndTime - now;
             if (left <= 0) {
-                staticTextEl.innerText = "00:00:00"; clearInterval(activeInterval);
+                staticTextEl.innerText = "00:00:00"; 
+                clearInterval(activeInterval);
+                
+                // Play Sound
+                const audio = document.getElementById('alarm-sound');
+                if(audio) { audio.currentTime = 0; audio.play().catch(e=>console.log(e)); }
+
                 let flash = false; const bg = document.getElementById('timerBg').value;
                 activeInterval = setInterval(() => { displayPage.style.backgroundColor = flash ? bg : 'red'; flash = !flash; }, 500);
                 return;
@@ -626,9 +630,11 @@
     function stopDisplay(e) {
         if(e) e.stopPropagation();
         displayPage.classList.remove('active');
+        document.querySelector('.hamburger-btn').style.display = ''; 
         
-        // Show hamburger again
-        document.querySelector('.hamburger-btn').style.display = '';
+        // Stop Sound
+        const audio = document.getElementById('alarm-sound');
+        if(audio) { audio.pause(); audio.currentTime = 0; }
 
         if(activeInterval) clearInterval(activeInterval);
         displayPage.style.backgroundColor = '';
@@ -637,9 +643,7 @@
 
     function shareFromDisplay(e) {
         if(e) e.stopPropagation();
-        if (currentMode) {
-            copyShareUrl(currentMode);
-        }
+        if (currentMode) copyShareUrl(currentMode);
     }
 
     function copyShareUrl(mode) {
@@ -686,6 +690,8 @@
             loadAllSettings();
         } else {
             const mode = urlParams.get('mode') || (urlParams.has('t') ? 'banner' : null);
+            pendingShareMode = mode; 
+
             if(mode === 'banner') {
                 if(urlParams.has('t')) document.getElementById('userInput').value = urlParams.get('t');
                 if(urlParams.has('c')) document.getElementById('bannerColor').value = urlParams.get('c');
@@ -694,14 +700,12 @@
                 if(urlParams.has('v')) document.getElementById('speedSlider').value = urlParams.get('v');
                 if(urlParams.has('vp')) document.getElementById('vPosSlider').value = urlParams.get('vp');
                 if(urlParams.has('sc')) document.getElementById('scrollCheck').checked = urlParams.get('sc') === 'true';
-                startMode('banner');
             } else if(mode === 'clock') {
                 if(urlParams.has('c')) document.getElementById('clockColor').value = urlParams.get('c');
                 if(urlParams.has('b')) document.getElementById('clockBg').value = urlParams.get('b');
                 if(urlParams.has('s')) document.getElementById('clockSize').value = urlParams.get('s');
                 if(urlParams.has('vp')) document.getElementById('clockVPos').value = urlParams.get('vp');
                 if(urlParams.has('h24')) document.getElementById('clock24').checked = urlParams.get('h24') === 'true';
-                startMode('clock');
             } else if(mode === 'timer') {
                 if(urlParams.has('c')) document.getElementById('timerColor').value = urlParams.get('c');
                 if(urlParams.has('b')) document.getElementById('timerBg').value = urlParams.get('b');
@@ -710,14 +714,14 @@
                 if(urlParams.has('h')) document.getElementById('timerH').value = urlParams.get('h');
                 if(urlParams.has('m')) document.getElementById('timerM').value = urlParams.get('m');
                 if(urlParams.has('ss')) document.getElementById('timerS').value = urlParams.get('ss');
-                startMode('timer');
             } else if(mode === 'stop') {
                 if(urlParams.has('c')) document.getElementById('stopColor').value = urlParams.get('c');
                 if(urlParams.has('b')) document.getElementById('stopBg').value = urlParams.get('b');
                 if(urlParams.has('s')) document.getElementById('stopSize').value = urlParams.get('s');
                 if(urlParams.has('vp')) document.getElementById('stopVPos').value = urlParams.get('vp');
-                startMode('stopwatch');
             }
+            
+            document.getElementById('start-overlay').classList.add('active');
         }
     };
 
